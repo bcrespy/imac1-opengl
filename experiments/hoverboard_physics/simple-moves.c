@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
         glPushMatrix();
         glColor3f(0.5, 0.5, 0);
 
-        glTranslatef(0, yMove, 0);
+        glTranslatef(0, yMove/10, 0);
         glRotatef(angle, 0, 0, 1);
 
         dessinCarre();
