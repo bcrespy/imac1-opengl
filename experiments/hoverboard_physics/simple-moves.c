@@ -92,10 +92,17 @@ int main(int argc, char** argv) {
 
     /* Boucle d'affichage */
     int loop = 1;
-    int yMove = 0;
+    int xMove, yMove = 0;
+
+    int distance = 0;
+
+
+
     glPointSize(1);
     int pressButton = 0;
     float angle=0;
+
+
     while(loop) {
         /* RÃ©cupÃ©ration du temps au dÃ©but de la boucle */
         Uint32 startTime = SDL_GetTicks();
@@ -111,7 +118,10 @@ int main(int argc, char** argv) {
         glPushMatrix();
         glColor3f(0.5, 0.5, 0);
 
-        glTranslatef(0, yMove, 0);
+        xMove += distance * sin(angle * M_PI / 180);
+        yMove += distance * cos(angle * M_PI / 180);
+
+        glTranslatef(xMove, yMove, 0);
         glRotatef(angle, 0, 0, 1);
 
         dessinCarre();
@@ -151,7 +161,7 @@ int main(int argc, char** argv) {
                 case SDL_KEYDOWN:
 
                     if(e.key.keysym.sym == SDLK_UP)
-                        yMove +=1;
+                        distance +=1;
 
                     if(e.key.keysym.sym == SDLK_LEFT)
                         angle -= 5;
