@@ -76,8 +76,6 @@ int main(int argc, char** argv) {
     unsigned int windowHeight = 600;
 
 
-    int xClicked=0, yClicked=0, nbClicked = 0;
-
     /* Initialisation de la SDL */
     if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
         fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
@@ -94,11 +92,10 @@ int main(int argc, char** argv) {
 
     /* Boucle d'affichage */
     int loop = 1;
-    float xCarre=0, yCarre=0;
     int yMove = 0;
     glPointSize(1);
     int pressButton = 0;
-    float xStart = 0, yStart = 0, angle=0, xCircle=0, yCircle= 0, xChange=0.1, yChange=0.1;
+    float angle=0;
     while(loop) {
         /* RÃ©cupÃ©ration du temps au dÃ©but de la boucle */
         Uint32 startTime = SDL_GetTicks();
@@ -114,33 +111,11 @@ int main(int argc, char** argv) {
         glPushMatrix();
         glColor3f(0.5, 0.5, 0);
 
-        glTranslatef(xCarre, yMove, 0);
+        glTranslatef(0, yMove, 0);
         glRotatef(angle, 0, 0, 1);
 
         dessinCarre();
         glPopMatrix();
-
-        if(yCircle>=6-0.5) {
-            yChange=-0.1;
-        } else if(yCircle<=-6+0.5) {
-            yChange=0.1;
-        }
-
-        if(xCircle>=8-0.5) {
-            xChange=-0.1;
-        } else if(xCircle<=-8+0.5) {
-            xChange=0.1;
-        }
-        yCircle+=yChange;
-        xCircle+=xChange;
-
-        glPushMatrix();
-        glTranslatef(xCircle, yCircle, 0);
-        glColor3f(1, 0.5, 0.5);
-        dessinCercle(360);
-        glPopMatrix();
-
-
 
 
         /* Echange du front et du back buffer : mise Ã  jour de la fenÃªtre */
@@ -163,21 +138,12 @@ int main(int argc, char** argv) {
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
-                    xClicked = e.button.x;
-                    yClicked = e.button.y;
-                    xCarre   = -8 + 16.*(e.button.x/(float)windowWidth);
-                    yCarre   = 6 - 12*(e.button.y/((float)windowHeight-1.));
-                    nbClicked++;
-                    xStart = -8 + 16.*(e.button.x/(float)windowWidth);
-                    yStart = 6 - 12*(e.button.y/((float)windowHeight-1.));
-                    pressButton=1;
 
                     break;
 
                     /* move the mouse */
                 case SDL_MOUSEMOTION:
                     if(pressButton==1) {
-                        angle = xStart - e.button.x;
                     }
                     break;
 
@@ -191,7 +157,7 @@ int main(int argc, char** argv) {
                         angle -= 5;
 
                     if(e.key.keysym.sym == SDLK_RIGHT)
-                        angle += 1;
+                        angle += 5;
 
                     if(e.key.keysym.sym == SDLK_q)
                         loop = 0;
