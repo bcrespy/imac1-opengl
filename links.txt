@@ -1,2 +1,5 @@
 Gestion des collisions :
 https://openclassrooms.com/courses/theorie-des-collisions
+
+Bien tout apprendre sur la physique :
+http://www.physicsclassroom.com/class
