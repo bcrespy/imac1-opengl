@@ -1,0 +1,2 @@
+Gestion des collisions :
+https://openclassrooms.com/courses/theorie-des-collisions
