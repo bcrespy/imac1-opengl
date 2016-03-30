@@ -3,3 +3,5 @@ https://openclassrooms.com/courses/theorie-des-collisions
 
 Bien tout apprendre sur la physique :
 http://www.physicsclassroom.com/class
+
+http://www.licejus.lt/~fizmat/rytis/E-books/OReilly.Physics.For.Game.Developers.pdf
