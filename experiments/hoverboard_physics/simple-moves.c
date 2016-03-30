@@ -92,10 +92,18 @@ int main(int argc, char** argv) {
 
     /* Boucle d'affichage */
     int loop = 1;
-    int yMove = 0;
+    float xMove = 0, yMove = 0;
+
+    float distance = 0 ;
+
+    int rotateLPressed = 0, rotateRPressed = 0, movePressed = 0;
+
+
     glPointSize(1);
     int pressButton = 0;
     float angle=0;
+
+
     while(loop) {
         /* RÃ©cupÃ©ration du temps au dÃ©but de la boucle */
         Uint32 startTime = SDL_GetTicks();
@@ -105,14 +113,33 @@ int main(int argc, char** argv) {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-
         dessinRepere();
 
-        glPushMatrix();
-        glColor3f(0.5, 0.5, 0);
+        if( movePressed )
+        {
+            xMove += 0.1 * cos(angle * M_PI / 180);
+            yMove += 0.1 * sin(angle * M_PI / 180);
+        }
 
+        if( rotateLPressed )
+            angle+= 2;
+
+        if( rotateRPressed )
+            angle-= 2;
+
+        glPushMatrix();
+
+<<<<<<< HEAD
         glTranslatef(0, yMove/10, 0);
+=======
+
+        glTranslatef(xMove, yMove, 0);
+>>>>>>> sinusage
         glRotatef(angle, 0, 0, 1);
+        //glTranslatef(-cos(angle)*yDistance, -sin(angle)*yDistance, 0);
+
+
+        //glTranslatef(cos(angle)*yDistance, sin(angle)*yDistance, 0);
 
         dessinCarre();
         glPopMatrix();
@@ -151,16 +178,29 @@ int main(int argc, char** argv) {
                 case SDL_KEYDOWN:
 
                     if(e.key.keysym.sym == SDLK_UP)
-                        yMove +=1;
+                        movePressed = 1;
 
                     if(e.key.keysym.sym == SDLK_LEFT)
-                        angle -= 5;
+                        rotateLPressed = 1;
 
                     if(e.key.keysym.sym == SDLK_RIGHT)
-                        angle += 5;
+                        rotateRPressed = 1;
 
                     if(e.key.keysym.sym == SDLK_q)
                         loop = 0;
+                    break;
+
+                case SDL_KEYUP:
+
+                    if(e.key.keysym.sym == SDLK_UP)
+                        movePressed = 0;
+
+                    if(e.key.keysym.sym == SDLK_LEFT)
+                        rotateLPressed = 0;
+
+                    if(e.key.keysym.sym == SDLK_RIGHT)
+                        rotateRPressed = 0;
+
                     break;
 
                     /* resize window */
