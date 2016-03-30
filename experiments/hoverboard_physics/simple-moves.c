@@ -92,10 +92,11 @@ int main(int argc, char** argv) {
 
     /* Boucle d'affichage */
     int loop = 1;
-    int xMove, yMove = 0;
+    float xMove = 0, yMove = 0;
 
-    int distance = 0;
+    float distance = 0 ;
 
+    int rotateLPressed = 0, rotateRPressed = 0, movePressed = 0;
 
 
     glPointSize(1);
@@ -112,17 +113,29 @@ int main(int argc, char** argv) {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-
         dessinRepere();
 
-        glPushMatrix();
-        glColor3f(0.5, 0.5, 0);
+        if( movePressed )
+        {
+            xMove += 0.1 * cos(angle * M_PI / 180);
+            yMove += 0.1 * sin(angle * M_PI / 180);
+        }
 
-        xMove += distance * sin(angle * M_PI / 180);
-        yMove += distance * cos(angle * M_PI / 180);
+        if( rotateLPressed )
+            angle+= 2;
+
+        if( rotateRPressed )
+            angle-= 2;
+
+        glPushMatrix();
+
 
         glTranslatef(xMove, yMove, 0);
         glRotatef(angle, 0, 0, 1);
+        //glTranslatef(-cos(angle)*yDistance, -sin(angle)*yDistance, 0);
+
+
+        //glTranslatef(cos(angle)*yDistance, sin(angle)*yDistance, 0);
 
         dessinCarre();
         glPopMatrix();
@@ -161,16 +174,29 @@ int main(int argc, char** argv) {
                 case SDL_KEYDOWN:
 
                     if(e.key.keysym.sym == SDLK_UP)
-                        distance +=1;
+                        movePressed = 1;
 
                     if(e.key.keysym.sym == SDLK_LEFT)
-                        angle -= 5;
+                        rotateLPressed = 1;
 
                     if(e.key.keysym.sym == SDLK_RIGHT)
-                        angle += 5;
+                        rotateRPressed = 1;
 
                     if(e.key.keysym.sym == SDLK_q)
                         loop = 0;
+                    break;
+
+                case SDL_KEYUP:
+
+                    if(e.key.keysym.sym == SDLK_UP)
+                        movePressed = 0;
+
+                    if(e.key.keysym.sym == SDLK_LEFT)
+                        rotateLPressed = 0;
+
+                    if(e.key.keysym.sym == SDLK_RIGHT)
+                        rotateRPressed = 0;
+
                     break;
 
                     /* resize window */

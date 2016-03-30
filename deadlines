@@ -1,0 +1,36 @@
+--------------------------------------------------------------------------------
+
+DIM 27 MARS :
+              RECTANGLE QUI BOUGE
+              AVOIR FAIT UNE EBAUCHE DE MAP
+              CALCULS MATHS DEPLACEMENT
+
+--------------------------------------------------------------------------------
+
+DIM 3 AVR :
+              MOUVEMENTS AU COMPLET (ACCELERATION, DECELERATION, ROTATION)
+
+--------------------------------------------------------------------------------
+
+DIM 10 AVR :
+              LECTURE FICHIER MAP
+              AFFICHAGE MAP + HOVERBOARD + CAMERA
+
+--------------------------------------------------------------------------------
+
+DIM 17 AVR :
+              CALCUL DES COLLISIONS
+
+--------------------------------------------------------------------------------
+
+DIM 24 AVR :
+              ACTION SUR LES COLLISIONS (PERDRE PARTIE, CHECKPOINT)
+              GESTION DU SCORE
+
+--------------------------------------------------------------------------------
+
+DIM 2 MAI :
+              AJOUT DU MENU
+              CREATION DE MAP
+
+--------------------------------------------------------------------------------
