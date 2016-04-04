@@ -11,6 +11,11 @@ Projection
  glmatrixmode : quel est la pile de matrice active
 */
 
+struct Vector2f {
+    float x;
+    float y;
+};
+
 
 /* Nombre de bits par pixel de la fenÃªtre */
 static const unsigned int BIT_PER_PIXEL = 32;
@@ -20,13 +25,16 @@ static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 
 const int NB_MAX_POINTS = 4;
 
+// Vitesse en unité par seconde
+static const float INITIAL_SPEED = 5.;
+static const float MAX_SPEED = 12.;
 
 
 void reshape(unsigned int windowWidth, unsigned int windowHeight) {
     glViewport(0, 0, windowWidth, windowHeight);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(-8., 8., -8.*(float)windowHeight/(float)windowWidth, 8.*(float)windowHeight/(float)windowWidth);
+    gluOrtho2D(-20., 20., -20.*(float)windowHeight/(float)windowWidth, 20.*(float)windowHeight/(float)windowWidth);
 }
 
 
@@ -71,6 +79,14 @@ void dessinCercle(int angle) {
 
 int main(int argc, char** argv) {
 
+    // Vecteur vélocité de l'hoverboard
+    struct Vector2f velocity;
+    velocity.x = 0;
+    velocity.y = INITIAL_SPEED;
+
+    // Vecteur force du moteur
+    struct Vector2f motor;
+
     /* Dimensions de la fenÃªtre */
     unsigned int windowWidth  = 800;
     unsigned int windowHeight = 600;
@@ -96,7 +112,8 @@ int main(int argc, char** argv) {
 
     float distance = 0 ;
 
-    int rotateLPressed = 0, rotateRPressed = 0, movePressed = 0;
+    int rotateLPressed = 0, rotateRPressed = 0, movePressed = 0, acceleratePressed = 0;
+    Uint32 startTime;
 
 
     glPointSize(1);
@@ -105,8 +122,9 @@ int main(int argc, char** argv) {
 
 
     while(loop) {
+
         /* RÃ©cupÃ©ration du temps au dÃ©but de la boucle */
-        Uint32 startTime = SDL_GetTicks();
+        startTime = SDL_GetTicks();
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* Placer ici le code de dessin */
@@ -115,26 +133,41 @@ int main(int argc, char** argv) {
 
         dessinRepere();
 
-        if( movePressed )
-        {
-            xMove += 0.1 * cos(angle * M_PI / 180);
-            yMove += 0.1 * sin(angle * M_PI / 180);
-        }
+        /*xMove += 0.05 * cos(angle * M_PI / 180);
+        yMove += 0.05 * sin(angle * M_PI / 180);*/
 
         if( rotateLPressed )
-            angle+= 2;
+            angle+= 3;
 
         if( rotateRPressed )
-            angle-= 2;
+            angle-= 3;
+
+        float coefMotor = 0.;
+
+        if( acceleratePressed )
+            coefMotor = 1.;
+
+        // Nouveau vecteur Vitesse
+        struct Vector2f newVelocity;
+
+        // Force du moteur
+        motor.x = sin(-angle * M_PI / 180) * (INITIAL_SPEED+(MAX_SPEED-INITIAL_SPEED)*coefMotor);
+        motor.y = cos(-angle * M_PI / 180) * (INITIAL_SPEED+(MAX_SPEED-INITIAL_SPEED)*coefMotor);
+        newVelocity.x = 0.99*velocity.x + 0.01*motor.x;
+        newVelocity.y = 0.99*velocity.y + 0.01*motor.y;
+
+        // Froce de frottement pour le ralentissement
+        //newVelocity.x-= 0.1 * velocity.x;
+        //newVelocity.y-= 0.1 * velocity.y;
+
+        xMove+= (FRAMERATE_MILLISECONDS / 1000.0) * newVelocity.x;
+        yMove+= (FRAMERATE_MILLISECONDS / 1000.0) * newVelocity.y;
+
+        velocity = newVelocity;
 
         glPushMatrix();
-
-<<<<<<< HEAD
-        glTranslatef(0, yMove/10, 0);
-=======
-
         glTranslatef(xMove, yMove, 0);
->>>>>>> sinusage
+        glTranslatef(xMove, yMove, 0);
         glRotatef(angle, 0, 0, 1);
         //glTranslatef(-cos(angle)*yDistance, -sin(angle)*yDistance, 0);
 
@@ -186,6 +219,9 @@ int main(int argc, char** argv) {
                     if(e.key.keysym.sym == SDLK_RIGHT)
                         rotateRPressed = 1;
 
+                    if( e.key.keysym.sym == SDLK_n )
+                        acceleratePressed = 1;
+
                     if(e.key.keysym.sym == SDLK_q)
                         loop = 0;
                     break;
@@ -200,6 +236,9 @@ int main(int argc, char** argv) {
 
                     if(e.key.keysym.sym == SDLK_RIGHT)
                         rotateRPressed = 0;
+
+                    if( e.key.keysym.sym == SDLK_n )
+                        acceleratePressed = 0;
 
                     break;
 
