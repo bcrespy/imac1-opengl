@@ -131,8 +131,6 @@ int main(int argc, char** argv) {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        dessinRepere();
-
         /*xMove += 0.05 * cos(angle * M_PI / 180);
         yMove += 0.05 * sin(angle * M_PI / 180);*/
 
@@ -163,17 +161,15 @@ int main(int argc, char** argv) {
         xMove+= (FRAMERATE_MILLISECONDS / 1000.0) * newVelocity.x;
         yMove+= (FRAMERATE_MILLISECONDS / 1000.0) * newVelocity.y;
 
+        glTranslatef(-xMove*2.f, -yMove*2.f, 0);
+        dessinRepere();
+
         velocity = newVelocity;
 
         glPushMatrix();
         glTranslatef(xMove, yMove, 0);
         glTranslatef(xMove, yMove, 0);
         glRotatef(angle, 0, 0, 1);
-        //glTranslatef(-cos(angle)*yDistance, -sin(angle)*yDistance, 0);
-
-
-        //glTranslatef(cos(angle)*yDistance, sin(angle)*yDistance, 0);
-
         dessinCarre();
         glPopMatrix();
 
