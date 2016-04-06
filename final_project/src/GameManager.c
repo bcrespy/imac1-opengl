@@ -4,17 +4,9 @@
 void initGameManager( GameManager* gm )
 {
     gm->isLooping = 1;
-
-    gm->objects.player.position.x = 0;
-    gm->objects.player.position.y = 0;
-    gm->objects.player.velocity.x = 0;
-    gm->objects.player.velocity.y = 0;
-    gm->objects.player.motor.x = 0;
-    gm->objects.player.motor.y = 0;
-    gm->objects.player.angle = 0;
-    gm->objects.player.motorAcceleration = 0;
-
+    initPlayerData( &gm->objects.player );
     initEventManager( &gm->eventManager );
+    loadGraphics( &gm->objects );
 }
 
 

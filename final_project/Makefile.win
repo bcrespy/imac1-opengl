@@ -17,7 +17,7 @@ OBJ_FILES = $(patsubst $(SRC_PATH)/%.c,$(OBJ_PATH)/%.o, $(SRC_FILES))
 CCFLAGS += -D WIN32
 W_OBJ_FILES = $(subst /,\,$(OBJ_FILES))
 RM_CMD = for %%x in ($(W_OBJ_FILES)) do (if exist %%x (del /q %%x))
-LDFLAGS += -lmingw32 -lSDLmain -lopengl32 -lglu32
+LDFLAGS += -lmingw32 -lSDLmain -lSDL_image -lopengl32 -lglu32
 LDFLAGS += -lSDL
 CCFLAGS += -D AMD64
 

@@ -32,13 +32,13 @@ int main( int argc, char** argv )
     // Redirection du flux de sortie pour qu'il s'affiche dans la console
     freopen( "CON", "w", stdout );
 
-    // Initialisation du GameManager
-    GameManager gm;
-    initGameManager( &gm );
-
     // Ouverture d'une fenÃªtre et création d'un contexte OpenGL
     setVideoMode( windowWidth, windowHeight );
     reshape( windowWidth, windowHeight );
+
+    // Initialisation du GameManager
+    GameManager gm;
+    initGameManager( &gm );
 
     /* Titre de la fenÃªtre */
     SDL_WM_SetCaption( "Jeu super bien", NULL );
