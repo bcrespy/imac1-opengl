@@ -8,13 +8,12 @@
 #include "Renderer.h"
 #include "EventManager.h"
 
+
 /*!
     Le Game Manager contient les informations
     et fonctions nécessaires à sa bonne
     éxécution
 */
-
-
 struct gamemanager
 {
     int isLooping; //!< true tant que le jeu est en fonctionnement
@@ -41,13 +40,15 @@ void closeGameManager( GameManager* gm );
 
 
 /*!
- * \brief Function called at each frame of the main context
+ * \brief Fonction appelée à chaque frame du contexte OpenGL
  * @param gm Pointeur vers le Game Manager
  */
 void updateFrame( GameManager* gm );
 
 
 /*!
+ * \brief Recupère les évènements et leur associe une action
+ * @param gm Pointeur vers le Game Manager
  */
 void handleEvents( GameManager* gm );
 

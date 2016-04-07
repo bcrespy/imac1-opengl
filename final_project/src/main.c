@@ -40,7 +40,7 @@ int main( int argc, char** argv )
     GameManager gm;
     initGameManager( &gm );
 
-    /* Titre de la fenÃªtre */
+    // Titre de la fenÃªtre
     SDL_WM_SetCaption( "Jeu super bien", NULL );
 
     Uint32 startTime;
@@ -53,10 +53,10 @@ int main( int argc, char** argv )
         // On update la frame
         updateFrame( &gm );
 
-        /* Calcul du temps écoulé */
+        // Calcul du temps écoulé
         Uint32 elapsedTime = SDL_GetTicks() - startTime;
 
-        /* Si trop peu de temps s'est écoulé, on met en pause le programme */
+        // Si trop peu de temps s'est écoulé, on met en pause le programme
         if( elapsedTime < FRAMERATE_MILLISECONDS )
             SDL_Delay( FRAMERATE_MILLISECONDS - elapsedTime );
     }

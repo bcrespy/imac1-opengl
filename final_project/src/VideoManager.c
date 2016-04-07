@@ -6,7 +6,7 @@ void reshape( unsigned int windowWidth, unsigned int windowHeight )
     glViewport(0, 0, windowWidth, windowHeight);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(-20., 20., -20.*(float)windowHeight/(float)windowWidth, 20.*(float)windowHeight/(float)windowWidth);
+    gluOrtho2D(-10., 10., -10.*(float)windowHeight/(float)windowWidth, 10.*(float)windowHeight/(float)windowWidth);
 }
 
 

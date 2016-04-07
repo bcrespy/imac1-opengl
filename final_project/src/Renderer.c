@@ -1,10 +1,17 @@
 #include "Renderer.h"
 
 
+void initGraphics()
+{
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+}
+
+
 void loadGraphics( GameObjects* objects )
 {
     // Load player's texture
-    objects->player.texture = loadTexture( "bin/logo_br.png" );
+    objects->player.texture = loadTexture( "bin/yout.png" );
 }
 
 
@@ -17,13 +24,17 @@ GLuint loadTexture( const char filename[] )
         return;
     }
 
+    int i = 2;
+
+    printf( "test" );
+
     GLuint textureID;
 
     glGenTextures( 1, &textureID );
     glBindTexture( GL_TEXTURE_2D, textureID );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    gluBuild2DMipmaps( GL_TEXTURE_2D, GL_RGBA, 20, 20, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    gluBuild2DMipmaps( GL_TEXTURE_2D, GL_RGBA, surface->w, surface->h, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels );
 
     SDL_FreeSurface( surface );
 
@@ -61,7 +72,6 @@ void updateRender( GameObjects* objects )
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    /* Placer ici le code de dessin */
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -75,11 +85,8 @@ void updateRender( GameObjects* objects )
 
 
     glEnable (GL_TEXTURE_2D);
-    // ... et on indique quelle texture utiliser (celle qui a été créée précédemment).
     glBindTexture (GL_TEXTURE_2D, objects->player.texture );
-    // On peut enfin créer un objet (ici un simple carré).
     dessinCarre();
-    // Fin de l'application de la texture.
     glDisable (GL_TEXTURE_2D);
 
 

@@ -13,7 +13,14 @@ void dessinRepere();
 
 
 /*!
- *
+ * \brief Initialise les paramètes openGL
+ */
+void initGraphics();
+
+
+/*!
+ * \brief Charge les ressources graphiques des objets
+ * @params objects Pointeur vers les objets du jeu auxquels il faut assigner une texture
  */
 void loadGraphics( GameObjects* objects );
 
@@ -24,6 +31,7 @@ void loadGraphics( GameObjects* objects );
  * @return ID de la texture retourné par OpenGL
  */
 GLuint loadTexture( const char filename[] );
+
 
 /*!
  * \brief Function called at each frame of the context

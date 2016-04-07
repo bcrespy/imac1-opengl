@@ -10,3 +10,14 @@ void updatePlayerPosition( PlayerObject* player )
     player->position.x+= (FRAMERATE_MILLISECONDS / 1000.0) * player->velocity.x;
     player->position.y+= (FRAMERATE_MILLISECONDS / 1000.0) * player->velocity.y;
 }
+
+
+void loadMAP( const char filename[], GameObjects* objects )
+{
+    SDL_Surface* surface = IMG_Load( filename );
+    if( surface == NULL )
+    {
+        printf( "Error: \"%s\"\n",SDL_GetError() );
+        return;
+    }
+}

@@ -6,6 +6,7 @@ void initGameManager( GameManager* gm )
     gm->isLooping = 1;
     initPlayerData( &gm->objects.player );
     initEventManager( &gm->eventManager );
+    initGraphics();
     loadGraphics( &gm->objects );
 }
 

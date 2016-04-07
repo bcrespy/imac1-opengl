@@ -7,7 +7,7 @@
 #include <math.h>
 #include <SDL/SDL.h>
 
-/* Nombre minimal de millisecondes separant le rendu de deux images */
+// Nombre minimal de millisecondes separant le rendu de deux images
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 
 
@@ -28,6 +28,14 @@ typedef struct gameengine GameEngine;
  * @param player Reference to the structure containing player's informations
  */
 void updatePlayerPosition( PlayerObject* player );
+
+
+/*!
+ * \brief Parse la map et crée les Game Objects correspondant
+ * @param filename Chemin vers le fichier MAP
+ * @param objects Pointeur vers la liste d'objets du jeu
+ */
+void loadMAP( const char filename[], GameObjects* objects );
 
 
 #endif
