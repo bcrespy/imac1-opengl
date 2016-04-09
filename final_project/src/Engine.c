@@ -11,14 +11,11 @@ void updatePlayerPosition( PlayerObject* player, Vector2i window )
 
     // Passage dans le repère openGL
     Vector2f movement;
-    movement.x = (player->velocity.x / (float)window.x);
-    movement.y = (player->velocity.y / (float)window.x);
+    movement.x = (player->velocity.x / window.x/2.0);
+    movement.y = (player->velocity.y / window.x/2.0);
 
-    //player->position.x+= (FRAMERATE_MILLISECONDS / 1000.0) * movement.x;
-    //player->position.y+= (FRAMERATE_MILLISECONDS / 1000.0) * movement.y;
-
-    player->position.x = 0.1f;
-    player->position.y = 0.1f;
+    player->position.x+= (1.0/60.0) * movement.x;
+    player->position.y+= (1.0/60.0) * movement.y;
 
     printf( "[%f;%f]\n", player->position.x, player->position.y );
 }

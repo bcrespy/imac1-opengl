@@ -119,15 +119,15 @@ void updateRender( GameObjects* objects, Vector2i windowSize )
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    //glTranslatef( -objects->player.position.x, -objects->player.position.y, 0 );
+    glTranslatef( -objects->player.position.x, -objects->player.position.y, 0 );
     dessinRepere();
 
     renderMap( &objects->map, windowSize );
 
     glPushMatrix();
-    //glTranslatef( objects->player.position.x, objects->player.position.y, 0 );
-    //glTranslatef( objects->player.position.x, objects->player.position.y, 0 );
-    //glRotatef( objects->player.angle, 0, 0, 1 );
+    glTranslatef( objects->player.position.x, objects->player.position.y, 0 );
+    glTranslatef( objects->player.position.x, objects->player.position.y, 0 );
+    glRotatef( objects->player.angle, 0, 0, 1 );
 
 
     glEnable (GL_TEXTURE_2D);
