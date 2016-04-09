@@ -12,3 +12,10 @@ void initPlayerData( PlayerObject* player )
     player->angle = 0;
     player->motorAcceleration = 0;
 }
+
+
+void initGameObjects( GameObjects* go )
+{
+    initPlayerData( &go->player );
+    go->wallsNb = 0;
+}

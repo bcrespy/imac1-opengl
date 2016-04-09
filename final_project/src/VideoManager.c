@@ -1,18 +1,20 @@
 #include "VideoManager.h"
 
 
-void reshape( unsigned int windowWidth, unsigned int windowHeight )
+void reshape( Vector2i windowSize )
 {
-    glViewport(0, 0, windowWidth, windowHeight);
+    int height = (9/16.0f) * windowSize.x;
+    glViewport(0, 0, windowSize.x, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(-10., 10., -10.*(float)windowHeight/(float)windowWidth, 10.*(float)windowHeight/(float)windowWidth);
+    gluOrtho2D(-1., 1., -1.*(float)height/(float)windowSize.x, 1.*(float)height/(float)windowSize.x);
 }
 
 
-void setVideoMode( unsigned int windowWidth, unsigned int windowHeight )
+void setVideoMode( Vector2i windowSize )
 {
-    if( NULL == SDL_SetVideoMode( windowWidth, windowHeight, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE ) )
+    int height = (9/16.0f) * windowSize.x;
+    if( NULL == SDL_SetVideoMode( windowSize.x, height, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE ) )
     {
         fprintf( stderr, "Impossible d'ouvrir la fenetre. Fin du programme.\n" );
         exit( EXIT_FAILURE );

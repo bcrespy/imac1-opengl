@@ -5,12 +5,14 @@
 #include <GL/glu.h>
 #include <SDL/SDL.h>
 
+#include "MathsComponents.h"
+
 
 /* Nombre de bits par pixel de la fenÃªtre */
 static const unsigned int BIT_PER_PIXEL = 32;
 
-void reshape( unsigned int windowWidth, unsigned int windowHeight );
+void reshape( Vector2i windowSize );
 
-void setVideoMode( unsigned int windowWidth, unsigned int windowHeight );
+void setVideoMode( Vector2i windowSize );
 
 #endif

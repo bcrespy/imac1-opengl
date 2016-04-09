@@ -4,6 +4,7 @@
 
 #include <SDL/SDL.h>
 #include "VideoManager.h"
+#include "MathsComponents.h"
 
 #define NB_KEYS 500
 
@@ -16,6 +17,8 @@ typedef unsigned char Byte;
 struct eventmanager
 {
     Byte keysDown[NB_KEYS]; //!< Tableau de booléens pour chaque touche du clavier
+    unsigned int resized; //!< True s'il y a eu un resize à la frame précédente
+    Vector2i windowSize; //!< Taille de la fenêtre
     unsigned int closeEvent; //!< Passe à true si l'utilisateur a trigger une fermeture
     unsigned int leftClick; //!< True tant que l'utilisateur clique sur le bouton gauche
 };

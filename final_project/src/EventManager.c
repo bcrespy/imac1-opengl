@@ -53,8 +53,9 @@ void updateEvents( EventManager* em )
                 break;
 
             case SDL_VIDEORESIZE:
-                setVideoMode( e.resize.w, e.resize.h );
-                reshape( e.resize.w, e.resize.h );
+                em->resized = 1;
+                em->windowSize.x = e.resize.w;
+                em->windowSize.y = e.resize.h;
                 break;
 
 

@@ -11,17 +11,14 @@
 #include "Renderer.h"
 
 
+
 // Dimensions de la fenêtre
-static const int WINDOW_WIDTH = 800;
-static const int WINDOW_HEIGHT = 600;
+static const int WINDOW_WIDTH = 1280;
+static const int WINDOW_HEIGHT = 720;
 
 
 int main( int argc, char** argv )
 {
-    // Valeurs des dimensions de la fenêtre initiées à celles de départ
-    unsigned int windowWidth  = WINDOW_WIDTH;
-    unsigned int windowHeight = WINDOW_HEIGHT;
-
     // Initialisation de la SDL
     if( -1 == SDL_Init( SDL_INIT_VIDEO ) )
     {
@@ -32,13 +29,10 @@ int main( int argc, char** argv )
     // Redirection du flux de sortie pour qu'il s'affiche dans la console
     freopen( "CON", "w", stdout );
 
-    // Ouverture d'une fenÃªtre et création d'un contexte OpenGL
-    setVideoMode( windowWidth, windowHeight );
-    reshape( windowWidth, windowHeight );
-
     // Initialisation du GameManager
     GameManager gm;
-    initGameManager( &gm );
+    Vector2i window; window.x = WINDOW_WIDTH; window.y = WINDOW_HEIGHT;
+    initGameManager( &gm, window );
 
     // Titre de la fenÃªtre
     SDL_WM_SetCaption( "Jeu super bien", NULL );
@@ -51,7 +45,7 @@ int main( int argc, char** argv )
         startTime = SDL_GetTicks();
 
         // On update la frame
-        updateFrame( &gm );
+        updateFrame( &gm, gm.eventManager.windowSize );
 
         // Calcul du temps écoulé
         Uint32 elapsedTime = SDL_GetTicks() - startTime;

@@ -28,8 +28,9 @@ typedef struct gamemanager GameManager;
 /*!
  * \brief Initialise le Game Manager tranmis en paramètre
  * @param gm Pointeur vers Game Manager qui doit être initialisé
+ * @param windowSize Taille de la fenêtre en pixels
  */
-void initGameManager( GameManager* gm );
+void initGameManager( GameManager* gm, Vector2i windowSize );
 
 
 /*!
@@ -42,8 +43,9 @@ void closeGameManager( GameManager* gm );
 /*!
  * \brief Fonction appelée à chaque frame du contexte OpenGL
  * @param gm Pointeur vers le Game Manager
+ * @param windowSize Taille de la fenêtre
  */
-void updateFrame( GameManager* gm );
+void updateFrame( GameManager* gm, Vector2i windowSize );
 
 
 /*!
