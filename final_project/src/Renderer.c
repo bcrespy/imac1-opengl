@@ -23,8 +23,8 @@ void loadMapGraphics( MapObject* map, const char filename[] )
 {
     Vector2i mapSize;
     map->texture = loadTexture( filename, &mapSize, 0 );
-    map->size.x = mapSize.x;
-    map->size.y = mapSize.y;
+    map->size.x = 1200;
+    map->size.y = 700;
     map->proportion = map->size.y / ((float)map->size.x);
 }
 
@@ -35,7 +35,6 @@ GLuint loadTexture( const char filename[], Vector2i *textureSize, int alpha )
     if( surface == NULL )
     {
         printf( "Error: \"%s\"\n",SDL_GetError() );
-        return;
     }
 
     GLint type = (alpha) ? GL_RGBA : GL_RGB;

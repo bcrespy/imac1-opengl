@@ -29,8 +29,9 @@ typedef struct eventmanager EventManager;
 /*!
  * \brief Initialize the event manager
  * @param em Pointeur vers le manager d'évènements principal
+ * @param windowSize Taille de la fenêtre
  */
-void initEventManager( EventManager* em );
+void initEventManager( EventManager* em, Vector2i windowSize );
 
 
 /*!

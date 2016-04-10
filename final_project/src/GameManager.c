@@ -7,7 +7,7 @@ void initGameManager( GameManager* gm, Vector2i windowSize )
     reshape( windowSize );
     gm->isLooping = 1;
     initGameObjects( &gm->objects );
-    initEventManager( &gm->eventManager );
+    initEventManager( &gm->eventManager, windowSize );
     initGraphics();
     loadMAP( "bin/map.bmp", &gm->objects );
     loadGraphics( &gm->objects );

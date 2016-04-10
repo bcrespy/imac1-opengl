@@ -27,7 +27,7 @@ int main( int argc, char** argv )
     }
 
     // Redirection du flux de sortie pour qu'il s'affiche dans la console
-    freopen( "CON", "w", stdout );
+    //( "CON", "w", stdout );
 
     // Initialisation du GameManager
     GameManager gm;

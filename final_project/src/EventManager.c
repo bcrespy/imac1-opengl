@@ -1,10 +1,12 @@
 #include "EventManager.h"
 
 
-void initEventManager( EventManager* em )
+void initEventManager( EventManager* em, Vector2i windowSize )
 {
     em->closeEvent = 0;
     em->leftClick = 0;
+    em->windowSize.x = windowSize.x;
+    em->windowSize.y = windowSize.y;
 
     int key_nb;
     for( key_nb = 0; key_nb < NB_KEYS; key_nb++ )

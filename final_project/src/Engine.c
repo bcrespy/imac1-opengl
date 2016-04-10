@@ -17,7 +17,7 @@ void updatePlayerPosition( PlayerObject* player, Vector2i window )
     player->position.x+= (1.0/60.0) * movement.x;
     player->position.y+= (1.0/60.0) * movement.y;
 
-    //printf( "[%f;%f] = %f\n", player->motor.x, player->motor.y );
+    //printf( "[%f;%f]\n", player->velocity.x, player->velocity.y );
 }
 
 
