@@ -1,13 +1,12 @@
 #include "GameManager.h"
 
 
-void initGameManager( GameManager* gm, Vector2i windowSize )
+void initGameManager( GameManager* gm )
 {
-    setVideoMode( windowSize );
-    reshape( windowSize );
+    initWindow( &gm->window );
     gm->isLooping = 1;
     initGameObjects( &gm->objects );
-    initEventManager( &gm->eventManager, windowSize );
+    initEventManager( &gm->eventManager );
     initGraphics();
     loadMAP( "bin/map.bmp", &gm->objects );
     loadGraphics( &gm->objects );
@@ -20,12 +19,12 @@ void closeGameManager( GameManager* gm )
 }
 
 
-void updateFrame( GameManager* gm, Vector2i windowSize )
+void updateFrame( GameManager* gm )
 {
-    updateEvents( &gm->eventManager );
+    updateEvents( &gm->eventManager, &gm->window );
     handleEvents( gm );
-    updatePlayerPosition( &gm->objects.player, windowSize );
-    updateRender( &gm->objects, windowSize );
+    updatePlayerPosition( &gm->objects.player, gm->window.size );
+    updateRender( &gm->objects, gm->window.size );
 }
 
 
@@ -43,8 +42,7 @@ void handleEvents( GameManager* gm )
     // gestion de la taille de la fenêtre
     if( gm->eventManager.resized )
     {
-        setVideoMode( gm->eventManager.windowSize );
-        reshape( gm->eventManager.windowSize );
+        resizeWindow( &gm->window );
         gm->eventManager.resized = 0;
     }
 

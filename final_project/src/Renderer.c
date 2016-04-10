@@ -15,7 +15,7 @@ void loadGraphics( GameObjects* objects )
     objects->player.texture = loadTexture( "bin/yout.png", &size, 1 );
     objects->player.size.x = size.x;
     objects->player.size.y = size.y;
-    loadMapGraphics( &objects->map, "bin/map.png" );
+    loadMapGraphics( &objects->map, "bin/map2.png" );
 }
 
 
@@ -23,9 +23,18 @@ void loadMapGraphics( MapObject* map, const char filename[] )
 {
     Vector2i mapSize;
     map->texture = loadTexture( filename, &mapSize, 0 );
-    map->size.x = 1200;
-    map->size.y = 700;
+    map->size.x = mapSize.x;
+    map->size.y = mapSize.y;
     map->proportion = map->size.y / ((float)map->size.x);
+}
+
+
+Vector2f gameCoorToGLCoor( Vector2i vec, Vector2i windowSize )
+{
+    Vector2f vecGL;
+    vecGL.x = ( ((float)vec.x) / windowSize.x );
+    vecGL.y = vecGL.x * ( ((float)vec.y) / vec.x );
+    return vecGL;
 }
 
 
@@ -59,21 +68,17 @@ GLuint loadTexture( const char filename[], Vector2i *textureSize, int alpha )
 }
 
 
-void dessinCarre( Vector2i playerSize, Vector2i window )
+void dessinCarre( Vector2f playerSize )
 {
-    Vector2f playerSizeGL;
-    playerSizeGL.x = ( ((float)playerSize.x) / window.x );
-    playerSizeGL.y = playerSizeGL.x * ( ((float)playerSize.y) / playerSize.x );
-
     glBegin( GL_POLYGON );
     glTexCoord2f( 1.0, 1.0 );
-    glVertex2f( -playerSizeGL.x, playerSizeGL.y );
+    glVertex2f( -playerSize.x, playerSize.y );
     glTexCoord2f( 0.0, 1.0 );
-    glVertex2f( playerSizeGL.x, playerSizeGL.y );
+    glVertex2f( playerSize.x, playerSize.y );
     glTexCoord2f( 0.0, 0.0 );
-    glVertex2f( playerSizeGL.x, -playerSizeGL.y );
+    glVertex2f( playerSize.x, -playerSize.y );
     glTexCoord2f( 1.0, 0.0 );
-    glVertex2f( -playerSizeGL.x, -playerSizeGL.y );
+    glVertex2f( -playerSize.x, -playerSize.y );
     glEnd();
 }
 
@@ -89,14 +94,8 @@ void dessinRepere()
 }
 
 
-void renderMap( MapObject* map, Vector2i windowSize )
+void renderMap( Vector2f mapSizeGL )
 {
-    Vector2f mapSizeGL;
-    mapSizeGL.x = ( ((float)map->size.x) / windowSize.x );
-    mapSizeGL.y = mapSizeGL.x * ( ((float)map->size.y) / map->size.x );
-
-    glEnable( GL_TEXTURE_2D );
-    glBindTexture( GL_TEXTURE_2D, map->texture );
     glBegin( GL_POLYGON );
     glTexCoord2f( 0.0, 0.0 );
     glVertex2f( -mapSizeGL.x, mapSizeGL.y );
@@ -107,21 +106,23 @@ void renderMap( MapObject* map, Vector2i windowSize )
     glTexCoord2f( 0.0, 1.0 );
     glVertex2f( -mapSizeGL.x, -mapSizeGL.y );
     glEnd();
-    glDisable (GL_TEXTURE_2D);
 }
 
 
 void updateRender( GameObjects* objects, Vector2i windowSize )
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear( GL_COLOR_BUFFER_BIT );
 
-    glMatrixMode(GL_MODELVIEW);
+    glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 
     glTranslatef( -objects->player.position.x, -objects->player.position.y, 0 );
     dessinRepere();
 
-    renderMap( &objects->map, windowSize );
+    glEnable( GL_TEXTURE_2D );
+    glBindTexture( GL_TEXTURE_2D, objects->map.texture );
+    renderMap( gameCoorToGLCoor( objects->map.size, windowSize ) );
+    glDisable( GL_TEXTURE_2D );
 
     glPushMatrix();
     glTranslatef( objects->player.position.x, objects->player.position.y, 0 );
@@ -129,10 +130,10 @@ void updateRender( GameObjects* objects, Vector2i windowSize )
     glRotatef( objects->player.angle, 0, 0, 1 );
 
 
-    glEnable (GL_TEXTURE_2D);
-    glBindTexture (GL_TEXTURE_2D, objects->player.texture );
-    dessinCarre( objects->player.size, windowSize );
-    glDisable (GL_TEXTURE_2D);
+    glEnable( GL_TEXTURE_2D );
+    glBindTexture( GL_TEXTURE_2D, objects->player.texture );
+    dessinCarre( gameCoorToGLCoor( objects->player.size, windowSize ) );
+    glDisable( GL_TEXTURE_2D );
 
 
     glPopMatrix();

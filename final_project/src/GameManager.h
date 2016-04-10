@@ -7,6 +7,7 @@
 #include "Engine.h"
 #include "Renderer.h"
 #include "EventManager.h"
+#include "VideoManager.h"
 
 
 /*!
@@ -19,7 +20,8 @@ struct gamemanager
     int isLooping; //!< true tant que le jeu est en fonctionnement
     GameObjects objects; //!< Main player
     GameEngine engine; //!< Physic engine of the game
-    EventManager eventManager; //!< Handle the events
+    EventManager eventManager; //!< Object évènement principal
+    Window window; //!< Informations sur la fenêtre
 };
 
 typedef struct gamemanager GameManager;
@@ -28,9 +30,8 @@ typedef struct gamemanager GameManager;
 /*!
  * \brief Initialise le Game Manager tranmis en paramètre
  * @param gm Pointeur vers Game Manager qui doit être initialisé
- * @param windowSize Taille de la fenêtre en pixels
  */
-void initGameManager( GameManager* gm, Vector2i windowSize );
+void initGameManager( GameManager* gm );
 
 
 /*!
@@ -45,7 +46,7 @@ void closeGameManager( GameManager* gm );
  * @param gm Pointeur vers le Game Manager
  * @param windowSize Taille de la fenêtre
  */
-void updateFrame( GameManager* gm, Vector2i windowSize );
+void updateFrame( GameManager* gm );
 
 
 /*!

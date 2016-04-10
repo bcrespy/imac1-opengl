@@ -1,12 +1,10 @@
 #include "EventManager.h"
 
 
-void initEventManager( EventManager* em, Vector2i windowSize )
+void initEventManager( EventManager* em )
 {
     em->closeEvent = 0;
     em->leftClick = 0;
-    em->windowSize.x = windowSize.x;
-    em->windowSize.y = windowSize.y;
 
     int key_nb;
     for( key_nb = 0; key_nb < NB_KEYS; key_nb++ )
@@ -20,7 +18,7 @@ unsigned int isKeyDown( EventManager* em, unsigned int keyCode )
 }
 
 
-void updateEvents( EventManager* em )
+void updateEvents( EventManager* em, Window* window )
 {
     /* Boucle traitant les evenements */
     SDL_Event e;
@@ -56,8 +54,8 @@ void updateEvents( EventManager* em )
 
             case SDL_VIDEORESIZE:
                 em->resized = 1;
-                em->windowSize.x = e.resize.w;
-                em->windowSize.y = e.resize.h;
+                window->size.x = e.resize.w;
+                window->size.y = e.resize.h;
                 break;
 
 

@@ -12,10 +12,6 @@
 
 
 
-// Dimensions de la fenêtre
-static const int WINDOW_WIDTH = 1280;
-static const int WINDOW_HEIGHT = 720;
-
 
 int main( int argc, char** argv )
 {
@@ -27,15 +23,11 @@ int main( int argc, char** argv )
     }
 
     // Redirection du flux de sortie pour qu'il s'affiche dans la console
-    //( "CON", "w", stdout );
+    freopen( "CON", "w", stdout );
 
     // Initialisation du GameManager
     GameManager gm;
-    Vector2i window; window.x = WINDOW_WIDTH; window.y = WINDOW_HEIGHT;
-    initGameManager( &gm, window );
-
-    // Titre de la fenÃªtre
-    SDL_WM_SetCaption( "Jeu super bien", NULL );
+    initGameManager( &gm );
 
     Uint32 startTime;
 
@@ -45,7 +37,7 @@ int main( int argc, char** argv )
         startTime = SDL_GetTicks();
 
         // On update la frame
-        updateFrame( &gm, gm.eventManager.windowSize );
+        updateFrame( &gm );
 
         // Calcul du temps écoulé
         Uint32 elapsedTime = SDL_GetTicks() - startTime;

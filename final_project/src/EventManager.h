@@ -18,7 +18,6 @@ struct eventmanager
 {
     Byte keysDown[NB_KEYS]; //!< Tableau de booléens pour chaque touche du clavier
     unsigned int resized; //!< True s'il y a eu un resize à la frame précédente
-    Vector2i windowSize; //!< Taille de la fenêtre
     unsigned int closeEvent; //!< Passe à true si l'utilisateur a trigger une fermeture
     unsigned int leftClick; //!< True tant que l'utilisateur clique sur le bouton gauche
 };
@@ -31,7 +30,7 @@ typedef struct eventmanager EventManager;
  * @param em Pointeur vers le manager d'évènements principal
  * @param windowSize Taille de la fenêtre
  */
-void initEventManager( EventManager* em, Vector2i windowSize );
+void initEventManager( EventManager* em );
 
 
 /*!
@@ -43,10 +42,12 @@ unsigned int isKeyDown( EventManager* em, unsigned int keyCode );
 
 
 /*!
- * \biref Fonction appelée à chaque frame du contexte OpengGL
+ * \brief Fonction appelée à chaque frame du contexte OpengGL
  *        Gère la modification du Manager d'évènements en fonction des inputs de l'utilisateur
+ * @param em Pointeur vers l'event Manager
+ * @param window Pointeur l'objet contenant les informations de la fenêtre
  */
-void updateEvents( EventManager* em );
+void updateEvents( EventManager* em, Window* window );
 
 
 #endif
