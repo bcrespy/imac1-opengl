@@ -1,10 +1,17 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <stdlib.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <dirent.h>
+
+#ifndef WIN32
+    #include <sys/types.h>
+#endif
+
 #include "GameManager.h"
 #include "MathsComponents.h"
 
@@ -36,6 +43,26 @@ void loadGraphics( GameObjects* objects );
  * @return ID de la texture retourné par OpenGL
  */
 GLuint loadTexture( const char filename[], Vector2i *textureSize, int alpha );
+
+
+/*!
+ * \brief Charge une séquence de textures
+ * @param folderpath Chemin du dossier contenant les textures
+ * @param nbTextures Pointeur vers la variable qui contiendra le nombre de frames de la séquence
+ * @param textureSize Taille des textures chargées
+ * @param alpha bool - true si l'image contient une couche alpha
+ */
+GLuint* loadSequence(  const char folderpath[], int* nbTextures, Vector2i* textureSize, int alpha );
+
+
+/*!
+ * \brief Retourne l'id de la texture correspondant à la frame suivante de la séquence
+ * @param texturesList Liste des ID des textures chargées dans openGL
+ * @param currentTexture Pointeur vers l'index texture actuellement affichée
+ * @param nbFrames Nombre de frames de la séquence
+ * @return ID openGL de la prochaine texture de la séquence
+ */
+GLuint getNextTextureFromSequence( Sequence* seq );
 
 
 /*!

@@ -16,6 +16,8 @@ void loadGraphics( GameObjects* objects )
     objects->player.size.x = size.x;
     objects->player.size.y = size.y;
     loadMapGraphics( &objects->map, "bin/map2.png" );
+    objects->player.sprite.texturesList = loadSequence( "bin/menu", &objects->player.sprite.nbTextures, &objects->player.size, 0 );
+    objects->player.sprite.currentTexture = 0;
 }
 
 
@@ -77,6 +79,66 @@ GLuint loadTexture( const char filename[], Vector2i *textureSize, int alpha )
 }
 
 
+GLuint* loadSequence( const char folderpath[], int* nbFrames, Vector2i* textureSize, int alpha )
+{
+    DIR* direc = NULL;
+    direc = opendir( folderpath );
+    struct dirent* file = NULL;
+
+    if( direc == NULL )
+    {
+        printf( "Can't open the folder \"%s\"\n", folderpath );
+        exit(1);
+    }
+
+    // On compte le nombre de fichiers de la séquence
+    *nbFrames = 0;
+    while( (file = readdir( direc )) != NULL )
+        if( strcmp(file->d_name, ".") != 0 && strcmp(file->d_name, "..") != 0 )
+            (*nbFrames)++;
+
+    closedir( direc );
+    direc = opendir( folderpath );
+
+    GLuint* texturesList = malloc( (*nbFrames) * sizeof(GLuint) );
+    char filepath[50];
+
+    // On charge les textures de la séquence
+    int parser = 0;
+    while( (file = readdir( direc )) != NULL )
+    {
+        if( strcmp(file->d_name, ".") != 0 && strcmp(file->d_name, "..") != 0 )
+        {
+            strcat( filepath, folderpath );
+            strcat( filepath, "/" );
+            strcat( filepath, file->d_name );
+            texturesList[parser] = loadTexture( filepath, textureSize, alpha );
+            memset( filepath, 0, 50 );
+            parser++;
+        }
+    }
+
+    if( closedir(direc) == -1 )
+    {
+        printf( "Error when closing the directory \"%s\"\n", folderpath );
+        exit(1);
+    }
+
+    return texturesList;
+}
+
+
+GLuint getNextTextureFromSequence( Sequence* seq )
+{
+    if( seq->currentTexture >= seq->nbTextures-1 )
+        seq->currentTexture = 0;
+    else
+        seq->currentTexture++;
+
+    return seq->texturesList[seq->currentTexture];
+}
+
+
 void dessinRepere()
 {
     glBegin( GL_LINES );
@@ -129,7 +191,7 @@ void updateRender( GameObjects* objects, Vector2i windowSize )
 
 
     glEnable( GL_TEXTURE_2D );
-    glBindTexture( GL_TEXTURE_2D, objects->player.texture );
+    glBindTexture( GL_TEXTURE_2D, getNextTextureFromSequence( &objects->player.sprite ) );
     renderRect( gameCooriToGLCoor( objects->player.size, windowSize ) );
     glDisable( GL_TEXTURE_2D );
 

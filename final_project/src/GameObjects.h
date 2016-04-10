@@ -26,6 +26,19 @@ void initCameraData( CameraObject* camera );
 
 
 /*!
+ * Structure qui contient une séquence de textures et les informations
+ * nécessaires à leur affichage
+ */
+struct sequence
+{
+    GLuint* texturesList; //!< Liste des IDs openGL des textures de la séquence
+    int nbTextures; //!< Nombre de textures de la séquence
+    int currentTexture; //!< Texture de la séquence actuellement affichée 
+};
+typedef struct sequence Sequence;
+
+
+/*!
  * Structure de l'objet joueur, contient les informations
  * sur le joueur
  */
@@ -38,6 +51,7 @@ struct playerobject
     float motorAcceleration; //!< Facteur d'accélération du moteur
     GLuint texture; //!< ID openGL lié à la texture du joueur
     Vector2i size; //!< Taille de la texture du joueur
+    Sequence sprite; //!< Sprite du joueur
 };
 typedef struct playerobject PlayerObject;
 
