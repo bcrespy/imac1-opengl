@@ -17,7 +17,7 @@ static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 
 // Vitesse en pixels / s
 static const float INITIAL_SPEED = 1000.;
-static const float MAX_SPEED = 1000.;
+static const float MAX_SPEED = 2500.;
 
 
 struct gameengine
