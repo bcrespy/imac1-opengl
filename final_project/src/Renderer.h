@@ -12,7 +12,6 @@
 #define GL_CLAMP_TO_EDGE 0x812F
 
 
-void dessinCarre( Vector2f playerSize );
 void dessinRepere();
 
 
@@ -79,10 +78,10 @@ void loadMapGraphics( MapObject* map, const char filename[] );
 
 
 /*!
- * \brief Affiche la map avec la texture correcpondante
- * @param mapSize Taille de la MAP dans le repère openGL
+ * \brief Affiche un rectangle de la taille transmise en paramètres
+ * @param rectSize Taille du rectangle
  */
-void renderMap( Vector2f mapSizeGL );
+void renderRect( Vector2f rectSize );
 
 
 #endif

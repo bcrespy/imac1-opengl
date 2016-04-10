@@ -77,21 +77,6 @@ GLuint loadTexture( const char filename[], Vector2i *textureSize, int alpha )
 }
 
 
-void dessinCarre( Vector2f playerSize )
-{
-    glBegin( GL_POLYGON );
-    glTexCoord2f( 1.0, 0.0 );
-    glVertex2f( -playerSize.x, playerSize.y );
-    glTexCoord2f( 0.0, 0.0 );
-    glVertex2f( playerSize.x, playerSize.y );
-    glTexCoord2f( 0.0, 1.0 );
-    glVertex2f( playerSize.x, -playerSize.y );
-    glTexCoord2f( 1.0, 1.0 );
-    glVertex2f( -playerSize.x, -playerSize.y );
-    glEnd();
-}
-
-
 void dessinRepere()
 {
     glBegin( GL_LINES );
@@ -103,17 +88,17 @@ void dessinRepere()
 }
 
 
-void renderMap( Vector2f mapSizeGL )
+void renderRect( Vector2f rectSize )
 {
     glBegin( GL_POLYGON );
     glTexCoord2f( 0.0, 0.0 );
-    glVertex2f( -mapSizeGL.x, mapSizeGL.y );
+    glVertex2f( -rectSize.x, rectSize.y );
     glTexCoord2f( 1.0, 0.0 );
-    glVertex2f( mapSizeGL.x, mapSizeGL.y );
+    glVertex2f( rectSize.x, rectSize.y );
     glTexCoord2f( 1.0, 1.0 );
-    glVertex2f( mapSizeGL.x, -mapSizeGL.y );
+    glVertex2f( rectSize.x, -rectSize.y );
     glTexCoord2f( 0.0, 1.0 );
-    glVertex2f( -mapSizeGL.x, -mapSizeGL.y );
+    glVertex2f( -rectSize.x, -rectSize.y );
     glEnd();
 }
 
@@ -134,7 +119,7 @@ void updateRender( GameObjects* objects, Vector2i windowSize )
 
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D, objects->map.texture );
-    renderMap( gameCooriToGLCoor( objects->map.size, windowSize ) );
+    renderRect( gameCooriToGLCoor( objects->map.size, windowSize ) );
     glDisable( GL_TEXTURE_2D );
 
     glPushMatrix();
@@ -145,7 +130,7 @@ void updateRender( GameObjects* objects, Vector2i windowSize )
 
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D, objects->player.texture );
-    dessinCarre( gameCooriToGLCoor( objects->player.size, windowSize ) );
+    renderRect( gameCooriToGLCoor( objects->player.size, windowSize ) );
     glDisable( GL_TEXTURE_2D );
 
 
