@@ -6,18 +6,25 @@ void updatePlayerPosition( PlayerObject* player, Vector2i window )
     // Force du moteur en pixels / s
     player->motor.x = sin( -player->angle * M_PI / 180 ) * ( INITIAL_SPEED + (MAX_SPEED-INITIAL_SPEED) * player->motorAcceleration );
     player->motor.y = cos( -player->angle * M_PI / 180 ) * ( INITIAL_SPEED + (MAX_SPEED-INITIAL_SPEED) * player->motorAcceleration );
-    player->velocity.x = 0.98*player->velocity.x + 0.02*player->motor.x;
-    player->velocity.y = 0.98*player->velocity.y + 0.02*player->motor.y;
+    player->velocity.x = 0.985*player->velocity.x + 0.015*player->motor.x;
+    player->velocity.y = 0.985*player->velocity.y + 0.015*player->motor.y;
 
     // Passage dans le repère openGL
-    Vector2f movement;
+    /*Vector2f movement;
     movement.x = (player->velocity.x / window.x/2.0);
-    movement.y = (player->velocity.y / window.x/2.0);
+    movement.y = (player->velocity.y / window.x/2.0);*/
 
-    player->position.x+= (1.0/60.0) * movement.x;
-    player->position.y+= (1.0/60.0) * movement.y;
+    player->position.x+= (1.0/60.0) * player->velocity.x;
+    player->position.y+= (1.0/60.0) * player->velocity.y;
 
     //printf( "[%f;%f]\n", player->velocity.x, player->velocity.y );
+}
+
+
+void updateCameraPosition( CameraObject* camera, PlayerObject player )
+{
+    camera->position.x+= ( player.position.x - camera->position.x ) / (float)FRAMES_NB_TO_MOVE_CAMERA;
+    camera->position.y+= ( player.position.y - camera->position.y ) / (float)FRAMES_NB_TO_MOVE_CAMERA;
 }
 
 

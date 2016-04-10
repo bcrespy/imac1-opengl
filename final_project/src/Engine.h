@@ -15,9 +15,13 @@
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 
 
+// Nombre de frames dont la caméra a besoin pour rejoindre le Joueur
+static const Uint32 FRAMES_NB_TO_MOVE_CAMERA = 20;
+
+
 // Vitesse en pixels / s
-static const float INITIAL_SPEED = 1000.;
-static const float MAX_SPEED = 2500.;
+static const float INITIAL_SPEED = 300.;
+static const float MAX_SPEED = 800.;
 
 
 struct gameengine
@@ -28,10 +32,18 @@ typedef struct gameengine GameEngine;
 
 
 /*!
- * \brief Updates the player position
- * @param player Reference to the structure containing player's informations
+ * \brief Met à jour la position du joueur
+ * @param player Référence vers la structure du joueur contenant les informations de ce dernier
  */
 void updatePlayerPosition( PlayerObject* player, Vector2i windowSize );
+
+
+/*!
+ * \brief Met à jour la position de la caméra en fonction de la position du joueur
+ * @param camera Référence vers l'objet caméra
+ * @param player Informations sur le joueur que doit suivre la caméra
+ */
+void updateCameraPosition( CameraObject* camera, PlayerObject player );
 
 
 /*!

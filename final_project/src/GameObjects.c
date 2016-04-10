@@ -1,6 +1,13 @@
 #include "GameObjects.h"
 
 
+void initCameraData( CameraObject* camera )
+{
+    camera->position.x = 0;
+    camera->position.y = 0;
+}
+
+
 void initPlayerData( PlayerObject* player )
 {
     player->position.x = 0;
@@ -16,6 +23,7 @@ void initPlayerData( PlayerObject* player )
 
 void initGameObjects( GameObjects* go )
 {
+    initCameraData( &go->camera );
     initPlayerData( &go->player );
     go->wallsNb = 0;
 }

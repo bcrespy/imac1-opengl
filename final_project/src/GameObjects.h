@@ -10,13 +10,19 @@
 
 
 /*!
- *
+ * Structure d'une caméra
  */
 struct cameraobject
 {
     Vector2f position; //!< Position de la caméra dans le repère du jeu
 };
 typedef struct cameraobject CameraObject;
+
+/*!
+ * \brief Initialise les coordonnées de la caméra
+ * @param camera Pointeur vers la caméra à initialiser
+ */
+void initCameraData( CameraObject* camera );
 
 
 /*!
@@ -34,7 +40,6 @@ struct playerobject
     Vector2i size; //!< Taille de la texture du joueur
 };
 typedef struct playerobject PlayerObject;
-
 
 /*!
  * \brief Initialise les différentes variables du joueur à t0
@@ -71,13 +76,13 @@ typedef struct wallobject WallObject;
  */
 struct gameobjects
 {
+    CameraObject camera; //!< Caméra principale
     PlayerObject player; //!< Joueur principal
     MapObject map; //!< Map courante
     WallObject walls[MAX_WALL_OBJECTS]; //!< Liste des murs pour les collisions
     int wallsNb; //!< Nombre d'objets mur
 };
 typedef struct gameobjects GameObjects;
-
 
 /*!
  * \brief Initialise variables des objets du jeu

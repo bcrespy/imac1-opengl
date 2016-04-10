@@ -47,7 +47,18 @@ GLuint loadTexture( const char filename[], Vector2i *textureSize, int alpha );
  *                   openGL est proportionnelle à la taille de la fenêtre
  * @return Vecteur 2f dans le repère openGL
  */
-Vector2f gameCoorToGLCoor( Vector2i vec, Vector2i windowSize );
+Vector2f gameCoorfToGLCoor( Vector2f vec, Vector2i windowSize );
+
+
+/*!
+ * \brief Transforme un vecteur aux coordonnées du jeu dans le
+ *        repère openGL
+ * @param vec Vecteur qui doit être transformé
+ * @param windowSize Taille de la fenêtre -- la taille du joueur dans le repère
+ *                   openGL est proportionnelle à la taille de la fenêtre
+ * @return Vecteur 2f dans le repère openGL
+ */
+Vector2f gameCooriToGLCoor( Vector2i vec, Vector2i windowSize );
 
 
 /*!

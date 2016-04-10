@@ -24,6 +24,7 @@ void updateFrame( GameManager* gm )
     updateEvents( &gm->eventManager, &gm->window );
     handleEvents( gm );
     updatePlayerPosition( &gm->objects.player, gm->window.size );
+    updateCameraPosition( &gm->objects.camera, gm->objects.player );
     updateRender( &gm->objects, gm->window.size );
 }
 

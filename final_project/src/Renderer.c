@@ -29,11 +29,20 @@ void loadMapGraphics( MapObject* map, const char filename[] )
 }
 
 
-Vector2f gameCoorToGLCoor( Vector2i vec, Vector2i windowSize )
+Vector2f gameCooriToGLCoor( Vector2i vec, Vector2i windowSize )
 {
     Vector2f vecGL;
     vecGL.x = ( ((float)vec.x) / windowSize.x );
-    vecGL.y = vecGL.x * ( ((float)vec.y) / vec.x );
+    vecGL.y = ( ((float)vec.y) / windowSize.x );
+    return vecGL;
+}
+
+
+Vector2f gameCoorfToGLCoor( Vector2f vec, Vector2i windowSize )
+{
+    Vector2f vecGL;
+    vecGL.x = ( vec.x / windowSize.x );
+    vecGL.y = ( vec.y / windowSize.x );
     return vecGL;
 }
 
@@ -54,10 +63,10 @@ GLuint loadTexture( const char filename[], Vector2i *textureSize, int alpha )
 
     glGenTextures( 1, &textureID );
     glBindTexture( GL_TEXTURE_2D, textureID );
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     glTexImage2D( GL_TEXTURE_2D, 0, type, surface->w, surface->h, 0, type, GL_UNSIGNED_BYTE, surface->pixels );
 
     printf( "Texture %s [%d;%d] loaded\n", filename, surface->w, surface->h );
@@ -71,13 +80,13 @@ GLuint loadTexture( const char filename[], Vector2i *textureSize, int alpha )
 void dessinCarre( Vector2f playerSize )
 {
     glBegin( GL_POLYGON );
-    glTexCoord2f( 1.0, 1.0 );
-    glVertex2f( -playerSize.x, playerSize.y );
-    glTexCoord2f( 0.0, 1.0 );
-    glVertex2f( playerSize.x, playerSize.y );
-    glTexCoord2f( 0.0, 0.0 );
-    glVertex2f( playerSize.x, -playerSize.y );
     glTexCoord2f( 1.0, 0.0 );
+    glVertex2f( -playerSize.x, playerSize.y );
+    glTexCoord2f( 0.0, 0.0 );
+    glVertex2f( playerSize.x, playerSize.y );
+    glTexCoord2f( 0.0, 1.0 );
+    glVertex2f( playerSize.x, -playerSize.y );
+    glTexCoord2f( 1.0, 1.0 );
     glVertex2f( -playerSize.x, -playerSize.y );
     glEnd();
 }
@@ -111,28 +120,32 @@ void renderMap( Vector2f mapSizeGL )
 
 void updateRender( GameObjects* objects, Vector2i windowSize )
 {
+    Vector2f playerPosGL = gameCoorfToGLCoor( objects->player.position, windowSize );
+    Vector2f cameraPosGL = gameCoorfToGLCoor( objects->camera.position, windowSize );
+
     glClear( GL_COLOR_BUFFER_BIT );
 
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 
-    glTranslatef( -objects->player.position.x, -objects->player.position.y, 0 );
+    // Gestion de la caméra
+    glTranslatef( -cameraPosGL.x*2, -cameraPosGL.y*2, 0 );
     dessinRepere();
 
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D, objects->map.texture );
-    renderMap( gameCoorToGLCoor( objects->map.size, windowSize ) );
+    renderMap( gameCooriToGLCoor( objects->map.size, windowSize ) );
     glDisable( GL_TEXTURE_2D );
 
     glPushMatrix();
-    glTranslatef( objects->player.position.x, objects->player.position.y, 0 );
-    glTranslatef( objects->player.position.x, objects->player.position.y, 0 );
+    glTranslatef( playerPosGL.x, playerPosGL.y, 0 );
+    glTranslatef( playerPosGL.x, playerPosGL.y, 0 );
     glRotatef( objects->player.angle, 0, 0, 1 );
 
 
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D, objects->player.texture );
-    dessinCarre( gameCoorToGLCoor( objects->player.size, windowSize ) );
+    dessinCarre( gameCooriToGLCoor( objects->player.size, windowSize ) );
     glDisable( GL_TEXTURE_2D );
 
 
