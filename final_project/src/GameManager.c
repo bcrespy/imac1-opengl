@@ -16,6 +16,7 @@ void initGameManager( GameManager* gm )
 void closeGameManager( GameManager* gm )
 {
     gm->isLooping = 0;
+    free( gm->objects.player.sprite.texturesList );
 }
 
 
