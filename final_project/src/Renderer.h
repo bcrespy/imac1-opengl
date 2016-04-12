@@ -57,9 +57,7 @@ GLuint* loadSequence(  const char folderpath[], int* nbTextures, Vector2i* textu
 
 /*!
  * \brief Retourne l'id de la texture correspondant à la frame suivante de la séquence
- * @param texturesList Liste des ID des textures chargées dans openGL
- * @param currentTexture Pointeur vers l'index texture actuellement affichée
- * @param nbFrames Nombre de frames de la séquence
+ * @param seq Séquence d'images à rendre
  * @return ID openGL de la prochaine texture de la séquence
  */
 GLuint getNextTextureFromSequence( Sequence* seq );

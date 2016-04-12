@@ -16,8 +16,8 @@ void loadGraphics( GameObjects* objects )
     objects->player.size.x = size.x;
     objects->player.size.y = size.y;
     loadMapGraphics( &objects->map, "bin/map2.png" );
-    objects->player.sprite.texturesList = loadSequence( "bin/menu", &objects->player.sprite.nbTextures, &objects->player.size, 0 );
-    objects->player.sprite.currentTexture = 0;
+    //objects->player.sprite.texturesList = loadSequence( "bin/menu", &objects->player.sprite.nbTextures, &objects->player.size, 0 );
+    //objects->player.sprite.currentTexture = 0;
 }
 
 
@@ -191,7 +191,8 @@ void updateRender( GameObjects* objects, Vector2i windowSize )
 
 
     glEnable( GL_TEXTURE_2D );
-    glBindTexture( GL_TEXTURE_2D, getNextTextureFromSequence( &objects->player.sprite ) );
+    //glBindTexture( GL_TEXTURE_2D, getNextTextureFromSequence( &objects->player.sprite ) );
+    glBindTexture( GL_TEXTURE_2D, objects->player.texture );
     renderRect( gameCooriToGLCoor( objects->player.size, windowSize ) );
     glDisable( GL_TEXTURE_2D );
 
