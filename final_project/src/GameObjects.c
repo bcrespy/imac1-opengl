@@ -10,8 +10,8 @@ void initCameraData( CameraObject* camera )
 
 void initPlayerData( PlayerObject* player )
 {
-    player->position.x = 0;
-    player->position.y = 0;
+    player->position.x = 200;
+    player->position.y = 200;
     player->velocity.x = 0;
     player->velocity.y = 0;
     player->motor.x = 0;

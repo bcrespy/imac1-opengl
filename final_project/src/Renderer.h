@@ -14,6 +14,7 @@
 
 #include "GameManager.h"
 #include "MathsComponents.h"
+#include "GeometryComponents.h"
 
 
 #define GL_CLAMP_TO_EDGE 0x812F
@@ -105,8 +106,16 @@ void loadMapGraphics( MapObject* map, const char filename[] );
 /*!
  * \brief Affiche un rectangle de la taille transmise en paramètres
  * @param rectSize Taille du rectangle
+ * @param centered Bool, centré sur le repère ou non
  */
-void renderRect( Vector2f rectSize );
+void renderRect( Vector2f rectSize, unsigned int centered );
+
+
+/*!
+ * \brief Affiche un polygone
+ * @param poly Polygone à afficher
+ */
+void renderPolygonei( Polygonei poly, Vector2i windowSize );
 
 
 #endif

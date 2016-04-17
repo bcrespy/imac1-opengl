@@ -1,3 +1,6 @@
+// TODO free the map ground allocation
+
+
 #include <SDL/SDL.h>
 #include <GL/gl.h>
 #include <GL/glu.h>

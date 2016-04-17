@@ -4,9 +4,21 @@
 
 #include <GL/gl.h>
 #include "MathsComponents.h"
+#include "GeometryComponents.h"
 
 
 #define MAX_WALL_OBJECTS 5000
+
+
+/*!
+ * Type de sol
+ */
+enum groundtype
+{
+    NO_GROUND,
+    WALL
+};
+typedef enum groundtype GroundType;
 
 
 /*!
@@ -33,7 +45,7 @@ struct sequence
 {
     GLuint* texturesList; //!< Liste des IDs openGL des textures de la séquence
     int nbTextures; //!< Nombre de textures de la séquence
-    int currentTexture; //!< Texture de la séquence actuellement affichée 
+    int currentTexture; //!< Texture de la séquence actuellement affichée
 };
 typedef struct sequence Sequence;
 
@@ -52,6 +64,7 @@ struct playerobject
     GLuint texture; //!< ID openGL lié à la texture du joueur
     Vector2i size; //!< Taille de la texture du joueur
     Sequence sprite; //!< Sprite du joueur
+    Polygonei collider; //!< Boite de collision du joueur
 };
 typedef struct playerobject PlayerObject;
 
@@ -71,6 +84,7 @@ struct mapobject
     Vector2i size; //!< Taille de la carte
     GLuint texture; //!< ID openGL lié à la texture de la carte
     float proportion; //!< height/width
+    GroundType** ground; //!< Tableau 2D des informations de la carte
 };
 typedef struct mapobject MapObject;
 
@@ -86,6 +100,20 @@ typedef struct wallobject WallObject;
 
 
 /*!
+ * Division d'une map,
+ * optimise les calcules de collisions
+ */
+struct mapdivision
+{
+    Vector2i position;
+    Vector2i size;
+    WallObject walls;
+    unsigned int nbWalls;
+};
+typedef struct mapdivision MapDivision;
+
+
+/*!
  * Contient tous les différents objets que le jeu doit gérer
  */
 struct gameobjects
@@ -93,6 +121,9 @@ struct gameobjects
     CameraObject camera; //!< Caméra principale
     PlayerObject player; //!< Joueur principal
     MapObject map; //!< Map courante
+
+    MapDivision** mapDivision; //!< Tableau 2D de la division de la map en carrés
+
     WallObject walls[MAX_WALL_OBJECTS]; //!< Liste des murs pour les collisions
     int wallsNb; //!< Nombre d'objets mur
 };

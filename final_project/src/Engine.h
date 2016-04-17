@@ -3,6 +3,7 @@
 
 
 #include "MathsComponents.h"
+#include "GeometryComponents.h"
 #include "GameObjects.h"
 #include <math.h>
 #include <SDL/SDL.h>
@@ -22,6 +23,10 @@ static const Uint32 FRAMES_NB_TO_MOVE_CAMERA = 20;
 // Vitesse en pixels / s
 static const float INITIAL_SPEED = 300.;
 static const float MAX_SPEED = 800.;
+
+
+// Nombre de pixels autour du joueur pour la recherche de collisions (doit être multiple de 2)
+static const unsigned int BOX_SIZE_COLLISION = 60;
 
 
 struct gameengine
@@ -47,11 +52,37 @@ void updateCameraPosition( CameraObject* camera, PlayerObject player );
 
 
 /*!
+ * \brief Calcule si le joueur est en collision avec un mur
+ * @param objects Pointeur vers la structure contenant les objets du jeu
+ * @param position Position de la collsion s'il y en a une
+ * @return 0 si le player n'est pas en collsion, 1 s'il l'est
+ */
+unsigned int isPlayerCollidingWall( GameObjects* objects, Vector2i* position );
+
+
+/*!
+ * \brief Calcule si un point est ou non à l'intérieur d'un polygone
+ * @param point Point à tester
+ * @param poly Polygone à tester
+ * @return booléen si le point est dans le polygone
+ */
+unsigned int isPointInPolygonei( Vector2i point, Polygonei poly );
+
+
+/*!
  * \brief Parse la map et crée les Game Objects correspondant
  * @param filename Chemin vers le fichier MAP
  * @param objects Pointeur vers la liste d'objets du jeu
  */
-void loadMAP( const char filename[], GameObjects* objects );
+GroundType** loadMAP( const char filename[], GameObjects* objects );
+
+
+/*!
+ * \brief Parse le fichier filename et crée un polygone correspondant
+ * @param filename Chemin vers le fichier collider
+ * @return Polygone
+ */
+Polygonei getColliderFromFile( const char filename[] );
 
 
 /*!

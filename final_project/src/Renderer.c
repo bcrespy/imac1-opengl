@@ -15,7 +15,7 @@ void loadGraphics( GameObjects* objects )
     objects->player.texture = loadTexture( "bin/yout.png", &size, 1 );
     objects->player.size.x = size.x;
     objects->player.size.y = size.y;
-    loadMapGraphics( &objects->map, "bin/map2.png" );
+    loadMapGraphics( &objects->map, "bin/map.png" );
     //objects->player.sprite.texturesList = loadSequence( "bin/menu", &objects->player.sprite.nbTextures, &objects->player.size, 0 );
     //objects->player.sprite.currentTexture = 0;
 }
@@ -24,7 +24,7 @@ void loadGraphics( GameObjects* objects )
 void loadMapGraphics( MapObject* map, const char filename[] )
 {
     Vector2i mapSize;
-    map->texture = loadTexture( filename, &mapSize, 0 );
+    map->texture = loadTexture( filename, &mapSize, 1 );
     map->size.x = mapSize.x;
     map->size.y = mapSize.y;
     map->proportion = map->size.y / ((float)map->size.x);
@@ -150,17 +150,50 @@ void dessinRepere()
 }
 
 
-void renderRect( Vector2f rectSize )
+void renderRect( Vector2f rectSize, unsigned int centered )
 {
     glBegin( GL_POLYGON );
-    glTexCoord2f( 0.0, 0.0 );
-    glVertex2f( -rectSize.x, rectSize.y );
-    glTexCoord2f( 1.0, 0.0 );
-    glVertex2f( rectSize.x, rectSize.y );
-    glTexCoord2f( 1.0, 1.0 );
-    glVertex2f( rectSize.x, -rectSize.y );
-    glTexCoord2f( 0.0, 1.0 );
-    glVertex2f( -rectSize.x, -rectSize.y );
+    glColor3f(1.0, 1.0, 1.0);
+
+    if( centered )
+    {
+        glTexCoord2f( 0.0, 0.0 );
+        glVertex2f( -rectSize.x, rectSize.y );
+        glTexCoord2f( 1.0, 0.0 );
+        glVertex2f( rectSize.x, rectSize.y );
+        glTexCoord2f( 1.0, 1.0 );
+        glVertex2f( rectSize.x, -rectSize.y );
+        glTexCoord2f( 0.0, 1.0 );
+        glVertex2f( -rectSize.x, -rectSize.y );
+    }
+    else
+    {
+        glTexCoord2f( 0.0, 0.0 );
+        glVertex2f( 0, rectSize.y*2 );
+        glTexCoord2f( 1.0, 0.0 );
+        glVertex2f( rectSize.x*2, rectSize.y*2 );
+        glTexCoord2f( 1.0, 1.0 );
+        glVertex2f( rectSize.x*2, 0 );
+        glTexCoord2f( 0.0, 1.0 );
+        glVertex2f( 0, 0 );
+    }
+
+    glEnd();
+}
+
+
+void renderPolygonei( Polygonei poly, Vector2i windowSize )
+{
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin( GL_POLYGON );
+
+    int i;
+    for( i = 0; i < poly.nbPoints; i++ )
+    {
+        Vector2f pos = gameCooriToGLCoor( poly.points[i], windowSize );
+        glVertex2f( pos.x*2, pos.y*2 );
+    }
+
     glEnd();
 }
 
@@ -181,7 +214,7 @@ void updateRender( GameObjects* objects, Vector2i windowSize )
 
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D, objects->map.texture );
-    renderRect( gameCooriToGLCoor( objects->map.size, windowSize ) );
+    renderRect( gameCooriToGLCoor( objects->map.size, windowSize ), 0 );
     glDisable( GL_TEXTURE_2D );
 
     glPushMatrix();
@@ -193,11 +226,33 @@ void updateRender( GameObjects* objects, Vector2i windowSize )
     glEnable( GL_TEXTURE_2D );
     //glBindTexture( GL_TEXTURE_2D, getNextTextureFromSequence( &objects->player.sprite ) );
     glBindTexture( GL_TEXTURE_2D, objects->player.texture );
-    renderRect( gameCooriToGLCoor( objects->player.size, windowSize ) );
+    renderRect( gameCooriToGLCoor( objects->player.size, windowSize ), 1 );
     glDisable( GL_TEXTURE_2D );
 
-
     glPopMatrix();
+
+/**
+ A ENLEVER : affichage du collider
+*/
+
+    Polygonei rotatedPolygone;
+
+    Vector2i center;
+    center.x = 0; center.y = 0;
+
+    getRotatedPolygone( objects->player.collider, center, objects->player.angle, &rotatedPolygone );
+
+    Vector2i translation;
+    translation.x = objects->player.position.x;
+    translation.y = objects->player.position.y;
+    Polygonei playerColliderTranslated;
+    getTranslatedPolygone( rotatedPolygone, translation, &playerColliderTranslated );
+
+    renderPolygonei( playerColliderTranslated, windowSize );
+
+/**
+ FIN AFFICHAGE COLLIDER
+*/
 
     /* Echange du front et du back buffer : mise Ã  jour de la fenÃªtre */
     SDL_GL_SwapBuffers();
