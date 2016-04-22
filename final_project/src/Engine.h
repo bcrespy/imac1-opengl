@@ -40,7 +40,7 @@ typedef struct gameengine GameEngine;
  * \brief Met à jour la position du joueur
  * @param player Référence vers la structure du joueur contenant les informations de ce dernier
  */
-void updatePlayerPosition( PlayerObject* player, Vector2i windowSize );
+void updatePlayerPosition( PlayerObject* player );
 
 
 /*!

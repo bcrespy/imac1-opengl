@@ -74,6 +74,12 @@ typedef struct playerobject PlayerObject;
  */
 void initPlayerData( PlayerObject* player );
 
+/*!
+ * \brief Désalloue les informations de la structure joueur
+ * @param player Référence vers l'objet du joueur à désallouer
+ */
+void freePlayerData( PlayerObject* player );
+
 
 /*!
  * Contient les informations sur la carte en cours
@@ -87,6 +93,12 @@ struct mapobject
     GroundType** ground; //!< Tableau 2D des informations de la carte
 };
 typedef struct mapobject MapObject;
+
+/*!
+ * \brief Désalloue les informations de la map
+ * @param map Pointeur vers la structure map à désallouer
+ */
+void freeMapObject( MapObject* map );
 
 
 /*!

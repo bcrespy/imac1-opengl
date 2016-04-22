@@ -20,12 +20,12 @@ unsigned int isKeyDown( EventManager* em, unsigned int keyCode )
 
 void updateEvents( EventManager* em, Window* window )
 {
-    /* Boucle traitant les evenements */
+    // Boucle d'évènements
     SDL_Event e;
 
     while( SDL_PollEvent(&e) )
     {
-        /* L'utilisateur ferme la fenÃªtre : */
+        // Fermeture de la fenêtre
         if( e.type == SDL_QUIT )
         {
             em->closeEvent = 1;
@@ -34,29 +34,33 @@ void updateEvents( EventManager* em, Window* window )
 
         switch( e.type )
         {
-                /* Clic souris */
             case SDL_MOUSEBUTTONUP:
                 em->leftClick = 1;
-                break;
+            break;
 
             case SDL_MOUSEBUTTONDOWN:
                 em->leftClick = 0;
-                break;
+            break;
 
-                /* Touche clavier */
+            case SDL_MOUSEMOTION:
+                em->mouseMove = 1;
+                em->mousePos.x = e.motion.x;
+                em->mousePos.y = e.motion.y;
+            break;
+
             case SDL_KEYDOWN:
                 em->keysDown[e.key.keysym.sym] = 1;
-                break;
+            break;
 
             case SDL_KEYUP:
                 em->keysDown[e.key.keysym.sym] = 0;
-                break;
+            break;
 
             case SDL_VIDEORESIZE:
                 em->resized = 1;
                 window->size.x = e.resize.w;
                 window->size.y = e.resize.h;
-                break;
+            break;
 
 
             default:

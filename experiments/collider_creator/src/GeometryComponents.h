@@ -10,28 +10,6 @@
 
 
 /*!
- * Rectangle dans N
- */
-typedef struct rectanglei
-{
-    Vector2i position; //!< Position du point supérieur gauche du rectangle
-    Vector2i size; //!< Taille du rectangle
-}
-Rectanglei;
-
-
-/*!
- * Rectangle dans R
- */
-typedef struct rectanglef
-{
-    Vector2f position; //!< Position du point supérieur gauche du rectangle
-    Vector2f size; //!< Taille du rectangle
-}
-Rectanglef;
-
-
-/*!
  * Segment dans N
  */
 struct segmenti

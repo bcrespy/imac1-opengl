@@ -21,9 +21,24 @@ void initPlayerData( PlayerObject* player )
 }
 
 
+void freePlayerData( PlayerObject* player )
+{
+    free( player->collider.points );
+}
+
+
 void initGameObjects( GameObjects* go )
 {
     initCameraData( &go->camera );
     initPlayerData( &go->player );
     go->wallsNb = 0;
+}
+
+
+void freeMapObject( MapObject* map )
+{
+    int i;
+    for( i = 0; i < map->size.x; i++ )
+        free( map->ground[i] );
+    free( map->ground );
 }

@@ -32,8 +32,11 @@ void getRotatedPolygone( Polygonei poly, Vector2i center, float angle, Polygonei
 
 int intersectSegment( Segmenti seg1, Segmenti seg2 )
 {
-    Vector2i D = { seg1.pt2.x - seg1.pt1.x, seg1.pt2.y - seg1.pt1.y },
-             E = { seg2.pt2.x - seg2.pt1.x, seg2.pt2.y - seg2.pt1.y };
+    Vector2i D, E;
+    D.x = seg1.pt2.x - seg1.pt1.x;
+    D.y = seg1.pt2.y - seg1.pt1.y;
+    E.x = seg2.pt2.x - seg2.pt1.x;
+    E.y = seg2.pt2.y - seg2.pt1.y;
 
     double denom = D.x*E.y - D.y*E.x;
 

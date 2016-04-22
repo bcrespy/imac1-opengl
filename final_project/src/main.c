@@ -1,4 +1,4 @@
-// TODO free the map ground allocation
+// TODO Affichage doit tout le temps être la taille maximum de l'écran pour que ce soit au pixel perfect
 
 
 #include <SDL/SDL.h>

@@ -20,6 +20,8 @@ struct eventmanager
     unsigned int resized; //!< True s'il y a eu un resize à la frame précédente
     unsigned int closeEvent; //!< Passe à true si l'utilisateur a trigger une fermeture
     unsigned int leftClick; //!< True tant que l'utilisateur clique sur le bouton gauche
+    unsigned int mouseMove; //!< True s'il y a eu un mouvement
+    Vector2i mousePos; //!< Position de la souris
 };
 
 typedef struct eventmanager EventManager;

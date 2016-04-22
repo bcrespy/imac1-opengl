@@ -4,6 +4,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <SDL/SDL.h>
+#include <SDL/SDL_video.h>
 
 #include "MathsComponents.h"
 
@@ -15,6 +16,8 @@ static const unsigned int BIT_PER_PIXEL = 32;
 static const int WINDOW_WIDTH = 1280;
 static const int WINDOW_HEIGHT = 720;
 
+static const unsigned int WINDOW_MIN_WIDTH = 600;
+
 
 /*!
  * Contient les informations de la fenêtre
@@ -22,8 +25,17 @@ static const int WINDOW_HEIGHT = 720;
 struct window
 {
     Vector2i size; //!< Taille de la fenêtre en pixels
+    Vector2i screenSize; //!< Taille maximum que peut prendre la fenêtre - taille de l'écran
+    float screenRatio; //!< Rapport largeur/hauteur de l'écran
 };
 typedef struct window Window;
+
+
+/*!
+ * \brief Retourne la résolution de l'écran
+ * @return Résolution de l'écran en pixels
+ */
+Vector2i getScreenSize();
 
 
 /*!

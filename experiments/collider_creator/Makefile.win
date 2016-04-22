@@ -1,0 +1,36 @@
+DEBUG = yes
+CC = gcc
+CFLAGS = -Wall -std=c11 -g -O2
+LDFLAGS  = -lm
+APP_BIN = hovercraft.exe
+SRC_PATH = src
+OBJ_PATH = obj
+INC_PATH = include
+BIN_PATH = bin
+LIB_PATH = lib
+MKDIR_CMD = mkdir
+TEST_DIR = if
+
+SRC_FILES = $(wildcard src/*.c) $(wildcard src/*/*.c)
+OBJ_FILES = $(patsubst $(SRC_PATH)/%.c,$(OBJ_PATH)/%.o, $(SRC_FILES))
+
+CCFLAGS += -D WIN32
+W_OBJ_FILES = $(subst /,\,$(OBJ_FILES))
+RM_CMD = for %%x in ($(W_OBJ_FILES)) do (if exist %%x (del /q %%x))
+LDFLAGS += -lmingw32 -lSDLmain -lSDL_image -lopengl32 -lglu32
+LDFLAGS += -lSDL
+CCFLAGS += -D AMD64
+
+all: $(APP_BIN)
+
+$(APP_BIN): $(OBJ_FILES)
+	$(CC) -o $(BIN_PATH)/$(APP_BIN) $(OBJ_FILES) $(CCFLAGS) $(LDFLAGS) -I $(INC_PATH)
+ifeq ($(DEBUG),yes)
+	.\$(BIN_PATH)\$(APP_BIN) bin/texture.png bin/collider.collider
+endif
+
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
+	$(CC) -c $< -o $@ $(CCFLAGS) $(LDFLAGS) -I $(INC_PATH)
+
+clean:
+	$(RM_CMD)

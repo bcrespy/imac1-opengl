@@ -33,18 +33,14 @@ void loadMapGraphics( MapObject* map, const char filename[] )
 
 Vector2f gameCooriToGLCoor( Vector2i vec, Vector2i windowSize )
 {
-    Vector2f vecGL;
-    vecGL.x = ( ((float)vec.x) / windowSize.x );
-    vecGL.y = ( ((float)vec.y) / windowSize.x );
+    Vector2f vecGL = { ( ((float)vec.x) / windowSize.x ), ( ((float)vec.y) / windowSize.x ) };
     return vecGL;
 }
 
 
 Vector2f gameCoorfToGLCoor( Vector2f vec, Vector2i windowSize )
 {
-    Vector2f vecGL;
-    vecGL.x = ( vec.x / windowSize.x );
-    vecGL.y = ( vec.y / windowSize.x );
+    Vector2f vecGL = { ( vec.x / windowSize.x ), ( vec.y / windowSize.x ) };
     return vecGL;
 }
 
@@ -182,6 +178,19 @@ void renderRect( Vector2f rectSize, unsigned int centered )
 }
 
 
+void renderRectAtExactPosition( Rectanglef rect )
+{
+    glBegin( GL_POLYGON );
+
+    glVertex2f( (rect.position.x)*2, (rect.position.y)*2 );
+    glVertex2f( (rect.position.x)*2, (rect.position.y + rect.size.y)*2 );
+    glVertex2f( (rect.position.x + rect.size.x)*2, (rect.position.y + rect.size.y)*2 );
+    glVertex2f( (rect.position.x + rect.size.x)*2, (rect.position.y)*2 );
+
+    glEnd();
+}
+
+
 void renderPolygonei( Polygonei poly, Vector2i windowSize )
 {
     glColor3f(1.0, 1.0, 1.0);
@@ -198,7 +207,7 @@ void renderPolygonei( Polygonei poly, Vector2i windowSize )
 }
 
 
-void updateRender( GameObjects* objects, Vector2i windowSize )
+void updateGameRender( GameObjects* objects, Vector2i windowSize )
 {
     Vector2f playerPosGL = gameCoorfToGLCoor( objects->player.position, windowSize );
     Vector2f cameraPosGL = gameCoorfToGLCoor( objects->camera.position, windowSize );
@@ -233,7 +242,7 @@ void updateRender( GameObjects* objects, Vector2i windowSize )
 
 /**
  A ENLEVER : affichage du collider
-*/
+
 
     Polygonei rotatedPolygone;
 
@@ -255,5 +264,26 @@ void updateRender( GameObjects* objects, Vector2i windowSize )
 */
 
     /* Echange du front et du back buffer : mise Ã  jour de la fenÃªtre */
+    SDL_GL_SwapBuffers();
+}
+
+
+void updateMainMenuRender( MenuObject menu, Vector2i windowSize )
+{
+    glClear( GL_COLOR_BUFFER_BIT );
+
+    int i = 0;
+    for( ; i < menu.nbItems; i++ )
+    {
+        if( menu.items[i].state == ITEM_DEFAULT )
+            glColor3f(1.0, 1.0, 1.0);
+        else
+            glColor3f(0.0, 1.0, 1.0);
+        Vector2f pos = gameCooriToGLCoor( menu.items[i].boundingRect.position, windowSize );
+        Vector2f size = gameCooriToGLCoor( menu.items[i].boundingRect.size, windowSize );
+        Rectanglef rect = { pos, size };
+        renderRectAtExactPosition( rect );
+    }
+
     SDL_GL_SwapBuffers();
 }

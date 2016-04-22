@@ -15,6 +15,7 @@
 #include "GameManager.h"
 #include "MathsComponents.h"
 #include "GeometryComponents.h"
+#include "MenuManager.h"
 
 
 #define GL_CLAMP_TO_EDGE 0x812F
@@ -91,7 +92,16 @@ Vector2f gameCooriToGLCoor( Vector2i vec, Vector2i windowSize );
  *        Met à jour le rendu en fonction des nouveaux paramètres
  * @param gm Game Manager
  */
-void updateRender( GameObjects* objects, Vector2i windowSize );
+void updateGameRender( GameObjects* objects, Vector2i windowSize );
+
+
+/*!
+ * \brief Fonction appelée à chaque frame du contexte lorsque
+ *        le jeu est en état Menu
+ * @param menu Pointeur vers le menu principal
+ * @param windowSize Taille de la fenêtre
+ */
+void updateMainMenuRender( MenuObject menu, Vector2i windowSize );
 
 
 /*!
@@ -109,6 +119,13 @@ void loadMapGraphics( MapObject* map, const char filename[] );
  * @param centered Bool, centré sur le repère ou non
  */
 void renderRect( Vector2f rectSize, unsigned int centered );
+
+
+/*!
+ * \brief Affiche un rectangle à une position précise
+ * @param rect Rectangle à afficher
+ */
+void renderRectAtExactPosition( Rectanglef rect );
 
 
 /*!

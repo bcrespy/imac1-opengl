@@ -1,7 +1,7 @@
 #include "Engine.h"
 
 
-void updatePlayerPosition( PlayerObject* player, Vector2i window )
+void updatePlayerPosition( PlayerObject* player )
 {
     // Force du moteur en pixels / s
     player->motor.x = sin( -player->angle * M_PI / 180 ) * ( INITIAL_SPEED + (MAX_SPEED-INITIAL_SPEED) * player->motorAcceleration );
@@ -9,15 +9,8 @@ void updatePlayerPosition( PlayerObject* player, Vector2i window )
     player->velocity.x = 0.985*player->velocity.x + 0.015*player->motor.x;
     player->velocity.y = 0.985*player->velocity.y + 0.015*player->motor.y;
 
-    // Passage dans le repère openGL
-    /*Vector2f movement;
-    movement.x = (player->velocity.x / window.x/2.0);
-    movement.y = (player->velocity.y / window.x/2.0);*/
-
     player->position.x+= (1.0/60.0) * player->velocity.x;
     player->position.y+= (1.0/60.0) * player->velocity.y;
-
-    //d printf( "[%f;%f]\n", player->velocity.x, player->velocity.y );
 }
 
 
@@ -141,14 +134,11 @@ unsigned int isPlayerCollidingWall( GameObjects* objects, Vector2i* position )
 
     Polygonei rotatedPolygone;
 
-    Vector2i center;
-    center.x = 0; center.y = 0;
+    Vector2i center = { 0, 0 };
 
     getRotatedPolygone( objects->player.collider, center, objects->player.angle, &rotatedPolygone );
 
-    Vector2i translation;
-    translation.x = objects->player.position.x;
-    translation.y = objects->player.position.y;
+    Vector2i translation = { objects->player.position.x , objects->player.position.y };
 
     Polygonei playerColliderTranslated;
     getTranslatedPolygone( rotatedPolygone, translation, &playerColliderTranslated );
@@ -165,9 +155,8 @@ unsigned int isPlayerCollidingWall( GameObjects* objects, Vector2i* position )
             if( objects->map.ground[i][j] == WALL )
             {
                 // Si le joueur est aux alentours d'un mur, on teste s'il est en collision avec ce dernier
-                Vector2i wallPosition;
-                wallPosition.x = i;
-                wallPosition.y = j;
+                Vector2i wallPosition = { i, j };
+
                 if( isPointInPolygonei( wallPosition, playerColliderTranslated ) )
                 {
                     printf("COLLID en [%i;%i]\n", i, j);
