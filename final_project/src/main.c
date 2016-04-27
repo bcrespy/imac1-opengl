@@ -1,5 +1,8 @@
-// TODO Affichage doit tout le temps être la taille maximum de l'écran pour que ce soit au pixel perfect
-
+/*
+    TODO : Background des boutons
+    TODO : Background des menus
+    TODO : Implantation des portails
+*/
 
 #include <SDL/SDL.h>
 #include <GL/gl.h>

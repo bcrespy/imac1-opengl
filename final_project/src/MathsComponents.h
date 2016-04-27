@@ -1,23 +1,34 @@
+/*!
+ * Gère les structures mathématiques basiques
+ * Propose quelques fonctions d'opérations sur les structures
+ */
+
 #ifndef MATHSCOMPONENTS_H
 #define MATHSCOMPONENTS_H
 
 #include <math.h>
 
 
-struct vector2f
+/*!
+ * Vecteur aux composantes dans R
+ */
+typedef struct vector2f
 {
     float x;
     float y;
-};
-typedef struct vector2f Vector2f;
+}
+Vector2f;
 
 
-struct vector2i
+/*!
+ * Vecteur aux composantes dans N
+ */
+typedef struct vector2i
 {
     int x;
     int y;
-};
-typedef struct vector2i Vector2i;
+}
+Vector2i;
 
 
 /*!

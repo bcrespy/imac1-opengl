@@ -1,26 +1,29 @@
 #include "MenuManager.h"
 
 
-void agenceMenu( MenuObject* menu, Vector2i windowSize )
+void agenceMenu( MenuObject* menu )
 {
-    int itemsHeight = 0;
-    int i;
-    for( i = 0; i < menu->nbItems; i++ )
-        itemsHeight+= menu->items[i].boundingRect.size.y;
-
-    int actualY = 0;
-
+    int topY = 0, currentY, i;
     for( i = 0; i < menu->nbItems; i++ )
     {
-        menu->items[i].boundingRect.position.x-= menu->items[i].boundingRect.size.x/2;
-        menu->items[i].boundingRect.position.y = actualY + (itemsHeight / 2 + (menu->nbItems-1) * SEPARATION_BETWEEN_BUTTONS) / 2;
-        actualY-= menu->items[i].boundingRect.size.y + SEPARATION_BETWEEN_BUTTONS;
+        menu->items[i].boundingRect.position.x = - menu->items[i].boundingRect.size.x / 2;
+        topY+= menu->items[i].marginTop + menu->items[i].boundingRect.size.y;
+    }
+
+    currentY = topY / 2 - menu->items[0].boundingRect.size.y;
+    for( i = 0; i < menu->nbItems; i++ )
+    {
+        menu->items[i].boundingRect.position.y = currentY;
+        if( i != menu->nbItems-1 )
+            currentY-= menu->items[i].boundingRect.size.y + menu->items[i+1].marginTop;
     }
 }
 
 
-void initMainMenu( MenuObject* menu, Vector2i windowSize )
+void initMainMenu( MenuObject* menu )
 {
+    menu->font = "bin/basica.ttf";
+
     menu->title = "";
     menu->nbItems = 0;
     menu->items = malloc( 0 );
@@ -36,6 +39,8 @@ void initMainMenu( MenuObject* menu, Vector2i windowSize )
         ITEM_BUTTON,
         ITEM_DEFAULT,
         buttonBox,
+        0,
+        { 255, 0, 0 },
         "Start Game"
     };
     addItemToMenu( menu, startButton );
@@ -45,6 +50,8 @@ void initMainMenu( MenuObject* menu, Vector2i windowSize )
         ITEM_BUTTON,
         ITEM_DEFAULT,
         buttonBox,
+        50,
+        { 255, 0, 0 },
         "Options"
     };
     addItemToMenu( menu, optionsButton );
@@ -54,6 +61,8 @@ void initMainMenu( MenuObject* menu, Vector2i windowSize )
         ITEM_BUTTON,
         ITEM_DEFAULT,
         buttonBox,
+        50,
+        { 255, 0, 0 },
         "Highscores"
     };
     addItemToMenu( menu, highscoresButton );
@@ -63,11 +72,215 @@ void initMainMenu( MenuObject* menu, Vector2i windowSize )
         ITEM_BUTTON,
         ITEM_DEFAULT,
         buttonBox,
+        50,
+        { 255, 0, 0 },
         "Quit game"
     };
     addItemToMenu( menu, quitButton );
 
-    agenceMenu( menu, windowSize );
+    agenceMenu( menu );
+}
+
+
+void initScoreListMenu( MenuObject* menu, ScoreList* sl )
+{
+    // chargement de la font
+    menu->font = "bin/arvo.ttf";
+
+    menu->title = "";
+    menu->nbItems = 0;
+    menu->items = malloc( 0 );
+
+    Rectanglei buttonBox;
+    buttonBox.position.x = 0;
+    buttonBox.position.y = 0;
+    buttonBox.size.x = BUTTON_SIZE.x;
+    buttonBox.size.y = BUTTON_SIZE.y;
+
+    Rectanglei textBox;
+    textBox.position.x = 0;
+    textBox.position.y = 0;
+    textBox.size.x = 400;
+    textBox.size.y = 30;
+
+    MenuItem title = {
+        22,
+        ITEM_TEXT,
+        ITEM_DEFAULT,
+        textBox,
+        0,
+        { 255, 255, 255 },
+        "- Best scores -"
+    };
+    addItemToMenu( menu, title );
+
+    int i;
+    for( i = 0; i < ((sl->scoresNb<10) ? sl->scoresNb : 10); i++ )
+    {
+        char str[15];
+        sprintf( str, "%i", sl->scores[i] );
+
+        MenuItem item = {
+            21,
+            ITEM_TEXT,
+            ITEM_DEFAULT,
+            textBox,
+            ((i==0)?30:0),
+            { 255, 255, 255 },
+        };
+        strcpy(item.text, str);
+        addItemToMenu( menu, item );
+    }
+
+    MenuItem backToMenu = {
+        22,
+        ITEM_BUTTON,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 0, 0 },
+        "Back to main menu"
+    };
+    addItemToMenu( menu, backToMenu );
+
+    agenceMenu( menu );
+}
+
+void initInGamePauseMenu( MenuObject* menu )
+{
+    // chargement de la font
+    menu->font = "bin/arvo.ttf";
+
+    menu->title = "";
+    menu->nbItems = 0;
+    menu->items = malloc( 0 );
+
+    Rectanglei buttonBox;
+    buttonBox.position.x = 0;
+    buttonBox.position.y = 0;
+    buttonBox.size.x = BUTTON_SIZE.x;
+    buttonBox.size.y = BUTTON_SIZE.y;
+
+    Rectanglei textBox;
+    textBox.position.x = 0;
+    textBox.position.y = 0;
+    textBox.size.x = 400;
+    textBox.size.y = 30;
+
+    MenuItem title = {
+        31,
+        ITEM_TEXT,
+        ITEM_DEFAULT,
+        textBox,
+        0,
+        { 255, 255, 255 },
+        "- Game Paused -"
+    };
+    addItemToMenu( menu, title );
+
+    MenuItem backToGame = {
+        32,
+        ITEM_BUTTON,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 0, 0 },
+        "Resume game"
+    };
+    addItemToMenu( menu, backToGame );
+
+    MenuItem backToMenu = {
+        33,
+        ITEM_BUTTON,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 0, 0 },
+        "Back to main menu"
+    };
+    addItemToMenu( menu, backToMenu );
+
+    MenuItem exitGame = {
+        34,
+        ITEM_BUTTON,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 0, 0 },
+        "Exit game"
+    };
+    addItemToMenu( menu, exitGame );
+
+    agenceMenu( menu );
+}
+
+
+void initGameOverMenu( MenuObject* menu )
+{
+    // chargement de la font
+    menu->font = "bin/arvo.ttf";
+
+    menu->title = "";
+    menu->nbItems = 0;
+    menu->items = malloc( 0 );
+
+    Rectanglei buttonBox;
+    buttonBox.position.x = 0;
+    buttonBox.position.y = 0;
+    buttonBox.size.x = BUTTON_SIZE.x;
+    buttonBox.size.y = BUTTON_SIZE.y;
+
+    Rectanglei textBox;
+    textBox.position.x = 0;
+    textBox.position.y = 0;
+    textBox.size.x = 400;
+    textBox.size.y = 30;
+
+    MenuItem title = {
+        40,
+        ITEM_TEXT,
+        ITEM_DEFAULT,
+        textBox,
+        0,
+        { 255, 255, 255 },
+        "- Game Over -"
+    };
+    addItemToMenu( menu, title );
+
+    MenuItem restart = {
+        41,
+        ITEM_BUTTON,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 0, 0 },
+        "Restart"
+    };
+    addItemToMenu( menu, restart );
+
+    MenuItem backToMain = {
+        42,
+        ITEM_BUTTON,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 0, 0 },
+        "Back to main menu"
+    };
+    addItemToMenu( menu, backToMain );
+
+    MenuItem exitGame = {
+        43,
+        ITEM_BUTTON,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 0, 0 },
+        "Exit game"
+    };
+    addItemToMenu( menu, exitGame );
+
+    agenceMenu( menu );
 }
 
 
@@ -79,43 +292,51 @@ void addItemToMenu( MenuObject* menu, MenuItem item )
 }
 
 
+void clearMenuItems( MenuObject* menu )
+{
+    int i = 0;
+    for( ; i < menu->nbItems; i++ )
+        menu->items[i].state = ITEM_DEFAULT;
+}
+
+
 void initButton( MenuItem* button, unsigned int id, Rectanglei boundingRect, const char* text )
 {
     button->id = id;
     button->boundingRect = boundingRect;
-    button->text = text;
+    //button->text = text;
     button->type = ITEM_BUTTON;
 }
 
 
-void initMenus( MenuManager* menuManager, Vector2i windowSize )
+void initMenus( MenuManager* menuManager, ScoreList* sl )
 {
-    initMainMenu( &menuManager->mainMenu, windowSize );
+    initMainMenu( &menuManager->mainMenu );
+    initScoreListMenu( &menuManager->scoresMenu, sl );
+    initInGamePauseMenu( &menuManager->inGamePauseMenu );
+    initGameOverMenu( &menuManager->gameOvermenu );
 }
 
 
 unsigned int handleMenuEvents( MenuObject* menu, Window window, EventManager* em )
 {
-    unsigned int hoveredItem = 0;
-
     // S'il y a eu un mouvement de souris on recherche s'il y a une collision
     if( em->mouseMove )
     {
         // on clear d'abord le statut des boutons
-        int i = 0;
-        for( ; i < menu->nbItems; i++ )
-            menu->items[i].state = ITEM_DEFAULT;
+        clearMenuItems( menu );
         em->mouseMove = 0;
 
         Vector2i position = getMenuCoor( em->mousePos, window );
-        hoveredItem = getHoveringItem( menu, position );
+        menu->hoveredItem = getHoveringItem( menu, position );
     }
 
     // traitement du clic
-    if( em->leftClick && hoveredItem != 0 )
+    if( em->leftClick )
     {
         em->leftClick = 0;
-        return hoveredItem;
+        if( menu->hoveredItem != 0 )
+            return menu->hoveredItem;
     }
 
     return 0;

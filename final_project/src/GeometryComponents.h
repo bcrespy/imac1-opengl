@@ -1,10 +1,12 @@
+/*!
+ * Objets géométriques basiques ainsi que quelques opérations
+ * concernant ces objets
+ */
+
 #ifndef GEOMETRYCOMPONENTS_H
 #define GEOMETRYCOMPONENTS_H
 
 #include <stdlib.h>
-#include <stdio.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 
 #include "MathsComponents.h"
 
@@ -34,12 +36,12 @@ Rectanglef;
 /*!
  * Segment dans N
  */
-struct segmenti
+typedef struct segmenti
 {
     Vector2i pt1; //!< Premier point
     Vector2i pt2; //!< Second point
-};
-typedef struct segmenti Segmenti;
+}
+Segmenti;
 
 /*!
  * \Brief Calcule s'il y a une intersection entre deux segments
@@ -54,36 +56,36 @@ int intersectSegment( Segmenti seg1, Segmenti seg2 );
 /*!
  * Segment dans R
  */
-struct segmentf
+typedef struct segmentf
 {
     Vector2f pt1; //!< Premier point
     Vector2f pt2; //!< Second point
-};
-typedef struct segmentf Segmentf;
+}
+Segmentf;
 
 
 /*!
  * Polygone non convexe dans R
  * Composé de points
  */
-struct polygonef
+typedef struct polygonef
 {
     Vector2f* points; //!< Liste des points du polygone
     unsigned int nbPoints; //!< Nombre de points du polygone
-};
-typedef struct polygonef Polygonef;
+}
+Polygonef;
 
 
 /*!
  * Polygone non convexe dans N
  * Composé de points
  */
-struct polygonei
+typedef struct polygonei
 {
     Vector2i* points; //!< Liste des points du polygone
     unsigned int nbPoints; //!< Nombre de points du polygone
-};
-typedef struct polygonei Polygonei;
+}
+Polygonei;
 
 /*!
  * \brief Calcule le translaté d'un polygone suivant un vecteur

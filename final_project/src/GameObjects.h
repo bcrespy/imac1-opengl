@@ -1,3 +1,9 @@
+/*!
+ * Structures de données pour les objets du jeu
+ * Contient aussi quelques fonctions de bases permettant la bonne
+ * initialisation des objets de jeu
+ */
+
 #ifndef GAMEOBJECTS_H
 #define GAMEOBJECTS_H
 
@@ -13,22 +19,22 @@
 /*!
  * Type de sol
  */
-enum groundtype
+typedef enum groundtype
 {
     NO_GROUND,
     WALL
-};
-typedef enum groundtype GroundType;
+}
+GroundType;
 
 
 /*!
  * Structure d'une caméra
  */
-struct cameraobject
+typedef struct cameraobject
 {
     Vector2f position; //!< Position de la caméra dans le repère du jeu
-};
-typedef struct cameraobject CameraObject;
+}
+CameraObject;
 
 /*!
  * \brief Initialise les coordonnées de la caméra
@@ -41,20 +47,20 @@ void initCameraData( CameraObject* camera );
  * Structure qui contient une séquence de textures et les informations
  * nécessaires à leur affichage
  */
-struct sequence
+typedef struct sequence
 {
     GLuint* texturesList; //!< Liste des IDs openGL des textures de la séquence
     int nbTextures; //!< Nombre de textures de la séquence
     int currentTexture; //!< Texture de la séquence actuellement affichée
-};
-typedef struct sequence Sequence;
+}
+Sequence;
 
 
 /*!
  * Structure de l'objet joueur, contient les informations
  * sur le joueur
  */
-struct playerobject
+typedef struct playerobject
 {
     Vector2f position; //!< Position du joueur dans le repère du jeu
     Vector2f velocity; //!< Vecteur vitesse appliqué au joueur en temps réel
@@ -65,8 +71,8 @@ struct playerobject
     Vector2i size; //!< Taille de la texture du joueur
     Sequence sprite; //!< Sprite du joueur
     Polygonei collider; //!< Boite de collision du joueur
-};
-typedef struct playerobject PlayerObject;
+}
+PlayerObject;
 
 /*!
  * \brief Initialise les différentes variables du joueur à t0
@@ -84,15 +90,15 @@ void freePlayerData( PlayerObject* player );
 /*!
  * Contient les informations sur la carte en cours
  */
-struct mapobject
+typedef struct mapobject
 {
     //Vector2f position;
     Vector2i size; //!< Taille de la carte
     GLuint texture; //!< ID openGL lié à la texture de la carte
     float proportion; //!< height/width
     GroundType** ground; //!< Tableau 2D des informations de la carte
-};
-typedef struct mapobject MapObject;
+}
+MapObject;
 
 /*!
  * \brief Désalloue les informations de la map
@@ -104,31 +110,31 @@ void freeMapObject( MapObject* map );
 /*!
  * Contient les informations sur la position d'un mur
  */
-struct wallobject
+typedef struct wallobject
 {
     Vector2f position; //!<< Position du pixel mur
-};
-typedef struct wallobject WallObject;
+}
+WallObject;
 
 
 /*!
  * Division d'une map,
  * optimise les calcules de collisions
  */
-struct mapdivision
+typedef struct mapdivision
 {
     Vector2i position;
     Vector2i size;
     WallObject walls;
     unsigned int nbWalls;
-};
-typedef struct mapdivision MapDivision;
+}
+MapDivision;
 
 
 /*!
  * Contient tous les différents objets que le jeu doit gérer
  */
-struct gameobjects
+typedef struct gameobjects
 {
     CameraObject camera; //!< Caméra principale
     PlayerObject player; //!< Joueur principal
@@ -138,8 +144,8 @@ struct gameobjects
 
     WallObject walls[MAX_WALL_OBJECTS]; //!< Liste des murs pour les collisions
     int wallsNb; //!< Nombre d'objets mur
-};
-typedef struct gameobjects GameObjects;
+}
+GameObjects;
 
 /*!
  * \brief Initialise variables des objets du jeu

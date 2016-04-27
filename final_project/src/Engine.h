@@ -1,3 +1,9 @@
+/*!
+ * L'engine est chargé de toute la partie physique du moteur du jeu
+ * Il gère l'application des forces sur les éléments du jeu
+ * Il s'occupe aussi du calcul des différentes collisions
+ */
+
 #ifndef ENGINE_H
 #define ENGINE_H
 
@@ -29,11 +35,10 @@ static const float MAX_SPEED = 800.;
 static const unsigned int BOX_SIZE_COLLISION = 60;
 
 
-struct gameengine
+typedef struct gameengine
 {
-};
-
-typedef struct gameengine GameEngine;
+}
+GameEngine;
 
 
 /*!

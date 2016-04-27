@@ -1,9 +1,18 @@
+/*!
+ * Le renderer s'occupe de toute la partie affichage avec openGL
+ * Il s'occupe aussi de gérer le chargement correct des textures en fonction des
+ * besoins de l'affichage
+ * Il gère aussi le changement de repère jeu <-> openGL
+ */
+
 #ifndef RENDERER_H
 #define RENDERER_H
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_ttf.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <dirent.h>
@@ -16,6 +25,7 @@
 #include "MathsComponents.h"
 #include "GeometryComponents.h"
 #include "MenuManager.h"
+#include "ScoreManager.h"
 
 
 #define GL_CLAMP_TO_EDGE 0x812F
@@ -31,10 +41,41 @@ void initGraphics();
 
 
 /*!
+ * \brief Libères les ressources graphiques utilisées
+ */
+void freeGraphics();
+
+
+/*!
  * \brief Charge les ressources graphiques des objets
  * @params objects Pointeur vers les objets du jeu auxquels il faut assigner une texture
  */
 void loadGraphics( GameObjects* objects );
+
+
+/*!
+ * \brief Charge une police font, génère la texture correspondant
+          et stocke les informations dans texture
+ * @param texture Pointeur vers les informations de texture
+ * @param text Texte à rendre
+ * @param font Pointeur vers la police chargée à utilise
+ * @param color Couleur de la police
+ */
+void renderFont( TextureInformations* texture, const char* text, TTF_Font* font, SDL_Color color );
+
+
+/*!
+ * \brief Parcourt tous les items du menu pour rendre la texture correspondant au texte de l'item
+ * @param menu Pointeur vers le menu
+ */
+void renderMenuFonts( MenuObject* menu );
+
+
+/*!
+ * \brief Rends le texte du score
+ * @param sm Pointeur vers le score manager
+ */
+void renderScoreFonts( ScoreManager* sm );
 
 
 /*!
@@ -91,17 +132,20 @@ Vector2f gameCooriToGLCoor( Vector2i vec, Vector2i windowSize );
  * \brief Fonction appelée à chaque frame du contexte
  *        Met à jour le rendu en fonction des nouveaux paramètres
  * @param gm Game Manager
+ * @param sm Pointeur vers le score manager
+ * @param windowSize Taille de la fenêtre
+ * @param onPause Booléen qui indique si le jeu est en pause ou non
  */
-void updateGameRender( GameObjects* objects, Vector2i windowSize );
+void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSize, int onPause );
 
 
 /*!
- * \brief Fonction appelée à chaque frame du contexte lorsque
- *        le jeu est en état Menu
+ * \brief Fonction appelée lors du rendu d'un menu
  * @param menu Pointeur vers le menu principal
  * @param windowSize Taille de la fenêtre
+ * @param background Booléen s'il faut dessiner un fond ou non
  */
-void updateMainMenuRender( MenuObject menu, Vector2i windowSize );
+void updateMenuRender( MenuObject menu, Vector2i windowSize, int drawBackground );
 
 
 /*!

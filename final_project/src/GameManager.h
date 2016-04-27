@@ -1,3 +1,9 @@
+/*!
+ * Le game manager est le coeur de fonctionnement du jeu
+ * C'est lui qui gère la logique de base du jeu et qui met en relation
+ * les différents composants afin de faire tourner le jeu
+ */
+
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
@@ -10,14 +16,16 @@
 #include "EventManager.h"
 #include "VideoManager.h"
 #include "MenuManager.h"
+#include "ScoreManager.h"
 
 
 /*!
-    Statut dans lequel le jeu se trouve
-*/
+ * Statut dans lequel le jeu se trouve
+ */
 typedef enum GameState
 {
     ON_MAIN_MENU,
+    ON_SCORELIST_MENU,
     ON_GAME,
     ON_PAUSE,
     ON_DEATH_ANIMATION,
@@ -41,6 +49,8 @@ typedef struct gamemanager
     Window window; //!< Informations sur la fenêtre
     MenuManager menuManager; //!< Informations sur les menus
     GameState state; //!< Statut du jeu (menu principal, en jeu, en pause...)
+    ScoreManager scoreManager; //!< Informations sur le score du jeu
+    ScoreList scoreList; //! Liste des scores à afficher
 }
 GameManager;
 

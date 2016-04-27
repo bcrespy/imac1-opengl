@@ -5,6 +5,13 @@ void initGraphics()
 {
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    TTF_Init();
+}
+
+
+void freeGraphics()
+{
+    TTF_Quit();
 }
 
 
@@ -18,6 +25,52 @@ void loadGraphics( GameObjects* objects )
     loadMapGraphics( &objects->map, "bin/map.png" );
     //objects->player.sprite.texturesList = loadSequence( "bin/menu", &objects->player.sprite.nbTextures, &objects->player.size, 0 );
     //objects->player.sprite.currentTexture = 0;
+}
+
+
+void renderFont( TextureInformations* texture, const char* text, TTF_Font* font, SDL_Color color )
+{
+    SDL_Surface* textSurface = TTF_RenderText_Blended( font, text, color );
+    texture->size.x = textSurface->w;
+    texture->size.y = textSurface->h;
+    glGenTextures( 1, &texture->id );
+    glBindTexture( GL_TEXTURE_2D, texture->id );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, textSurface->w, textSurface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, textSurface->pixels );
+    SDL_FreeSurface( textSurface );
+}
+
+
+void renderMenuFonts( MenuObject* menu )
+{
+    int i;
+    TTF_Font* font = TTF_OpenFont( menu->font, 25 );
+
+    for( i = 0; i < menu->nbItems; i++ )
+    {
+        renderFont( &menu->items[i].fontTexture, menu->items[i].text, font, menu->items[i].fontColor );
+        menu->items[i].fontTexturePosition.x = - (menu->items[i].fontTexture.size.x/2);
+        menu->items[i].fontTexturePosition.y = menu->items[i].boundingRect.position.y + (menu->items[i].boundingRect.size.y - menu->items[i].fontTexture.size.y) / 2 - 1;
+    }
+
+    TTF_CloseFont( font );
+}
+
+
+void renderScoreFonts( ScoreManager* sm )
+{
+    if( sm->scoreRendered != sm->currentScore )
+    {
+        char str[20];
+        sprintf( str, "SCORE : %d", (int)sm->currentScore );
+        TTF_Font* font = TTF_OpenFont( "bin/arvo.ttf", 25 );
+        SDL_Color color = { 255, 0, 0 };
+        renderFont( &sm->texture, str, font, color );
+        TTF_CloseFont( font );
+    }
 }
 
 
@@ -182,9 +235,16 @@ void renderRectAtExactPosition( Rectanglef rect )
 {
     glBegin( GL_POLYGON );
 
+    glTexCoord2f( 0.0, 1.0 );
     glVertex2f( (rect.position.x)*2, (rect.position.y)*2 );
+
+    glTexCoord2f( 0.0, 0.0 );
     glVertex2f( (rect.position.x)*2, (rect.position.y + rect.size.y)*2 );
+
+    glTexCoord2f( 1.0, 0.0 );
     glVertex2f( (rect.position.x + rect.size.x)*2, (rect.position.y + rect.size.y)*2 );
+
+    glTexCoord2f( 1.0, 1.0 );
     glVertex2f( (rect.position.x + rect.size.x)*2, (rect.position.y)*2 );
 
     glEnd();
@@ -207,10 +267,11 @@ void renderPolygonei( Polygonei poly, Vector2i windowSize )
 }
 
 
-void updateGameRender( GameObjects* objects, Vector2i windowSize )
+void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSize, int onPause )
 {
     Vector2f playerPosGL = gameCoorfToGLCoor( objects->player.position, windowSize );
     Vector2f cameraPosGL = gameCoorfToGLCoor( objects->camera.position, windowSize );
+    Vector2f scorePosGL = gameCooriToGLCoor( sm->position, windowSize );
 
     glClear( GL_COLOR_BUFFER_BIT );
 
@@ -218,27 +279,40 @@ void updateGameRender( GameObjects* objects, Vector2i windowSize )
     glLoadIdentity();
 
     // Gestion de la caméra
+    glPushMatrix();
     glTranslatef( -cameraPosGL.x*2, -cameraPosGL.y*2, 0 );
     dessinRepere();
 
+/* RENDU MAP */
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D, objects->map.texture );
     renderRect( gameCooriToGLCoor( objects->map.size, windowSize ), 0 );
     glDisable( GL_TEXTURE_2D );
+/* FIN RENDU MAP*/
 
+/* RENDU PLAYER */
     glPushMatrix();
-    glTranslatef( playerPosGL.x, playerPosGL.y, 0 );
-    glTranslatef( playerPosGL.x, playerPosGL.y, 0 );
+    glTranslatef( playerPosGL.x*2, playerPosGL.y*2, 0 );
     glRotatef( objects->player.angle, 0, 0, 1 );
-
-
     glEnable( GL_TEXTURE_2D );
     //glBindTexture( GL_TEXTURE_2D, getNextTextureFromSequence( &objects->player.sprite ) );
     glBindTexture( GL_TEXTURE_2D, objects->player.texture );
     renderRect( gameCooriToGLCoor( objects->player.size, windowSize ), 1 );
     glDisable( GL_TEXTURE_2D );
+    glPopMatrix();
+/* FIN RENDU PLAYER */
 
     glPopMatrix();
+
+/* RENDU SCORE */
+    glPushMatrix();
+    glEnable( GL_TEXTURE_2D );
+    glBindTexture( GL_TEXTURE_2D, sm->texture.id );
+    glTranslatef( scorePosGL.x, scorePosGL.y, 0 );
+    renderRect( gameCooriToGLCoor( sm->texture.size, windowSize ), 0 );
+    glDisable( GL_TEXTURE_2D );
+    glPopMatrix();
+/* FIN RENDU SCORE */
 
 /**
  A ENLEVER : affichage du collider
@@ -264,25 +338,42 @@ void updateGameRender( GameObjects* objects, Vector2i windowSize )
 */
 
     /* Echange du front et du back buffer : mise Ã  jour de la fenÃªtre */
-    SDL_GL_SwapBuffers();
+    if( !onPause )
+        SDL_GL_SwapBuffers();
 }
 
 
-void updateMainMenuRender( MenuObject menu, Vector2i windowSize )
+void updateMenuRender( MenuObject menu, Vector2i windowSize, int drawBackground )
 {
-    glClear( GL_COLOR_BUFFER_BIT );
+    if( drawBackground )
+        glClear( GL_COLOR_BUFFER_BIT );
 
     int i = 0;
     for( ; i < menu.nbItems; i++ )
     {
-        if( menu.items[i].state == ITEM_DEFAULT )
-            glColor3f(1.0, 1.0, 1.0);
-        else
-            glColor3f(0.0, 1.0, 1.0);
-        Vector2f pos = gameCooriToGLCoor( menu.items[i].boundingRect.position, windowSize );
-        Vector2f size = gameCooriToGLCoor( menu.items[i].boundingRect.size, windowSize );
-        Rectanglef rect = { pos, size };
-        renderRectAtExactPosition( rect );
+        if( menu.items[i].type == ITEM_BUTTON )
+        {
+            if( menu.items[i].state == ITEM_DEFAULT )
+                glColor3f( 1.0, 1.0, 1.0 );
+            else
+                glColor3f( 0.0, 1.0, 1.0 );
+
+            // Render du background de l'item
+            Vector2f pos = gameCooriToGLCoor( menu.items[i].boundingRect.position, windowSize );
+            Vector2f size = gameCooriToGLCoor( menu.items[i].boundingRect.size, windowSize );
+            Rectanglef rect = { pos, size };
+            renderRectAtExactPosition( rect );
+        }
+
+        // Render du texte de l'item
+        Vector2f txtPos = gameCooriToGLCoor( menu.items[i].fontTexturePosition, windowSize );
+        Vector2f txtSize = gameCooriToGLCoor( menu.items[i].fontTexture.size, windowSize );
+        Rectanglef textRect = { txtPos, txtSize };
+        glEnable( GL_TEXTURE_2D );
+        glColor3f( 1.0f, 1.0f, 1.0f );
+        glBindTexture( GL_TEXTURE_2D, menu.items[i].fontTexture.id );
+        renderRectAtExactPosition( textRect );
+        glDisable( GL_TEXTURE_2D );
     }
 
     SDL_GL_SwapBuffers();

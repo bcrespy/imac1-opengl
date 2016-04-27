@@ -1,3 +1,8 @@
+/*!
+ * Le video manager s'occupe de la gestion de la fenêtre et du contexte openGL
+ * Il est séparé du renderer afin de facilité l'approche logique du programme
+ */
+
 #ifndef VIDEOMANAGER_H
 #define VIDEOMANAGER_H
 
@@ -22,13 +27,13 @@ static const unsigned int WINDOW_MIN_WIDTH = 600;
 /*!
  * Contient les informations de la fenêtre
  */
-struct window
+typedef struct window
 {
     Vector2i size; //!< Taille de la fenêtre en pixels
     Vector2i screenSize; //!< Taille maximum que peut prendre la fenêtre - taille de l'écran
     float screenRatio; //!< Rapport largeur/hauteur de l'écran
-};
-typedef struct window Window;
+}
+Window;
 
 
 /*!

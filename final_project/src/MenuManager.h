@@ -1,9 +1,20 @@
+/*!
+ * Gestion avancée des menus
+ * Propose une interface de création des menus
+ * et les fonctions permettant de gérer cette dernière
+ */
+
 #ifndef MENUMANAGER_H
 #define MENUMANAGER_H
+
+#include <GL/gl.h>
+#include <SDL/SDL.h>
 
 #include "VideoManager.h"
 #include "EventManager.h"
 #include "GeometryComponents.h"
+#include "Graphics.h"
+#include "ScoreManager.h"
 
 
 static const unsigned int SEPARATION_BETWEEN_BUTTONS = 50;
@@ -26,7 +37,19 @@ static const Vector2i BUTTON_SIZE = { 400, 50 };
  * 12 : Bouton Highscores
  * 13 : Bouton Quit game
  * --------------
- * 20 :
+ * 21 : Liste des scores
+ * 22 : Bouton Back to main menu
+ * --------------
+ * 31 : Pause menu
+ * 32 : Back to game button
+ * 33 : Back to main menu button
+ * 34 : Exit game
+ * --------------
+ * 40 : Game Over Menu
+ * 41 : Restart
+ * 42 : Back to main menu
+ * 43 : Exit game
+ *
  */
 
 
@@ -64,7 +87,11 @@ typedef struct menuitem
     MenuItemType type; //!< En fonction du type d'item, il aura un affichage/comportement différent
     MenuItemState state; //!< En fonction de l'état dans lequel l'item est, il apparaitra différemment
     Rectanglei boundingRect; //!< Boite de collision de l'item, définit la zone d'intérêt
-    const char* text; //!< Texte correspondant au menu
+    unsigned int marginTop; //!< Marge supérieur de l'item
+    SDL_Color fontColor; //!< Couleur du texte de l'item
+    char text[255]; //!< Texte correspondant au menu
+    TextureInformations fontTexture; //!< Informations sur la texture de la police
+    Vector2i fontTexturePosition; //!< Nécessaire pour centrer le texte dans le bouton
 }
 MenuItem;
 
@@ -88,6 +115,9 @@ typedef struct menuobject
     char* title; //!< Titre du menu -- sera affiché tout en haut
     MenuItem* items; //!< Liste des items du menu
     unsigned int nbItems; //!< Nombre d'items du menu
+    const char* font; //!< Police des items du menu
+    unsigned int hoveredItem; //!< ID du bouton hovered - 0 si aucun
+    TextureInformations background; //!< Informations sur la texture background du menu
 }
 MenuObject;
 
@@ -99,18 +129,42 @@ MenuObject;
 void addItemToMenu( MenuObject* menu, MenuItem item );
 
 /*!
+ * \brief Nettoie le statut des items du menu
+ * @param menu Pointeur vers le menu à clear
+ */
+void clearMenuItems( MenuObject* menu );
+
+/*!
  * \brief Initialise le mnu principal du jeu
  * @param menu Pointeur vers l'objet menu à initialiser
- * @param windowSize Taille de la fenêtre : sert à agencer le menu
  */
-void initMainMenu( MenuObject* menu, Vector2i windowSize );
+void initMainMenu( MenuObject* menu );
+
+/*!
+ * \brief Initialise le menu de la liste des scores
+ * @param menu Pointeur vers l'objet menu à initialiser
+ * @param scoreList Pointeur vers la liste des scores
+ */
+void initScoreListMenu( MenuObject* menu, ScoreList* scoreList );
+
+/*!
+ * \brief Initialise le menu de pause in-game
+ * @param menu Pointeur vers l'objet menu à initialiser
+ */
+void initInGamePauseMenu( MenuObject* menu );
+
+/*!
+ * \brief Initialise le menu Game Over
+ * @param menu Pointeur vers l'objet menu à initialiser
+ */
+void initGameOverMenu( MenuObject* menu );
 
 /*!
  * \brief Agence le menu de façon proportionnée
  * @param menu Pointeur vers le menu à agencer
  * @param windowSize Taille de la fenêtre de rendu
  */
-void agenceMenu( MenuObject* menu, Vector2i windowSize );
+void agenceMenu( MenuObject* menu );
 
 /*!
  * \brief Gère les évènements du menu
@@ -145,15 +199,18 @@ Vector2i getMenuCoor( Vector2i position, Window window );
 typedef struct menumanager
 {
     MenuObject mainMenu; //!< Menu principal
+    MenuObject scoresMenu; //!< Menu des top scores
+    MenuObject inGamePauseMenu; //!< Menu de pause in-game
+    MenuObject gameOvermenu; //!< Menu game over
 }
 MenuManager;
 
 /*!
  * \brief Initialise toutes les données des menus et les Stocke
  * @param menuManager Pointeur vers le conteneur des informations des menus
- * @param windowSize Taille de la fenêtre, sert à agencer les menus
+ * @param scoreList Pointeur vers la liste des scores
  */
-void initMenus( MenuManager* menuManager, Vector2i windowSize );
+void initMenus( MenuManager* menuManager, ScoreList* scoreList );
 
 
 
