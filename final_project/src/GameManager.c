@@ -29,10 +29,7 @@ void initGameManager( GameManager* gm )
     gm->objects.player.collider = getColliderFromFile( "bin/playercollider.collider" );
 
     initGraphics();
-    renderMenuFonts( &gm->menuManager.mainMenu );
-    renderMenuFonts( &gm->menuManager.scoresMenu );
-    renderMenuFonts( &gm->menuManager.inGamePauseMenu );
-    renderMenuFonts( &gm->menuManager.gameOvermenu );
+    initMenuGraphics( &gm->menuManager );
 
     gm->objects.map.ground = loadMAP( "bin/map.bmp", &gm->objects );
     loadGraphics( &gm->objects );
@@ -47,6 +44,23 @@ void startGame( GameManager* gm )
     gm->state = ON_GAME;
     initGameObjects( &gm->objects );
     initScoreManager( &gm->scoreManager );
+}
+
+
+void initMenuGraphics( MenuManager* mm )
+{
+    renderMenuFonts( &mm->mainMenu );
+    renderMenuFonts( &mm->scoresMenu );
+    renderMenuFonts( &mm->inGamePauseMenu );
+    renderMenuFonts( &mm->gameOvermenu );
+
+    renderMenuGraphics( &mm->mainMenu );
+    mm->scoresMenu.backgroundSprite = mm->mainMenu.backgroundSprite;
+    mm->scoresMenu.spriteSize = mm->mainMenu.spriteSize;
+    mm->scoresMenu.buttonTexture.id = loadTexture( "bin/buttonTexture.png", &mm->scoresMenu.buttonTexture.size, 1 );
+    mm->scoresMenu.buttonTextureHover.id = loadTexture( "bin/buttonTextureHover.png", &mm->scoresMenu.buttonTextureHover.size, 1 );
+    renderMenuGraphics( &mm->inGamePauseMenu );
+    renderMenuGraphics( &mm->gameOvermenu );
 }
 
 
@@ -75,7 +89,7 @@ void updateFrame( GameManager* gm )
             action = handleMenuEvents( &gm->menuManager.mainMenu, gm->window, &gm->eventManager );
             if( action )
                 itemAction( action, gm );
-            updateMenuRender( gm->menuManager.mainMenu, gm->window.screenSize, 1 );
+            updateMenuRender( &gm->menuManager.mainMenu, gm->window.screenSize, 1 );
 
         break;
 
@@ -84,7 +98,7 @@ void updateFrame( GameManager* gm )
             action = handleMenuEvents( &gm->menuManager.scoresMenu, gm->window, &gm->eventManager );
             if( action )
                 itemAction( action, gm );
-            updateMenuRender( gm->menuManager.scoresMenu, gm->window.screenSize, 1 );
+            updateMenuRender( &gm->menuManager.scoresMenu, gm->window.screenSize, 1 );
 
         break;
 
@@ -114,7 +128,7 @@ void updateFrame( GameManager* gm )
                 itemAction( action, gm );
 
             updateGameRender( &gm->objects, &gm->scoreManager, gm->window.screenSize, 1 );
-            updateMenuRender( gm->menuManager.inGamePauseMenu, gm->window.screenSize, 0 );
+            updateMenuRender( &gm->menuManager.inGamePauseMenu, gm->window.screenSize, 0 );
 
         break;
 
@@ -124,7 +138,7 @@ void updateFrame( GameManager* gm )
                 itemAction( action, gm );
 
             updateGameRender( &gm->objects, &gm->scoreManager, gm->window.screenSize, 1 );
-            updateMenuRender( gm->menuManager.gameOvermenu, gm->window.screenSize, 0 );
+            updateMenuRender( &gm->menuManager.gameOvermenu, gm->window.screenSize, 0 );
         break;
     }
 

@@ -65,6 +65,15 @@ void renderFont( TextureInformations* texture, const char* text, TTF_Font* font,
 
 
 /*!
+ * \brief Rend le background du menu
+ * @param menu Pointeur vers le menu
+ * @param path Chemin vers la texture / séquence à charger
+ * @param isSequence Bool si on doit charger une séquence ou une texture
+ */
+void renderMenuGraphics( MenuObject* menu );
+
+
+/*!
  * \brief Parcourt tous les items du menu pour rendre la texture correspondant au texte de l'item
  * @param menu Pointeur vers le menu
  */
@@ -145,7 +154,7 @@ void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSi
  * @param windowSize Taille de la fenêtre
  * @param background Booléen s'il faut dessiner un fond ou non
  */
-void updateMenuRender( MenuObject menu, Vector2i windowSize, int drawBackground );
+void updateMenuRender( MenuObject* menu, Vector2i windowSize, int drawBackground );
 
 
 /*!

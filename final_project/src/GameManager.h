@@ -63,6 +63,13 @@ void initGameManager( GameManager* gm );
 
 
 /*!
+ * \brief Initialise les graphiques des menus du jeu
+ * @param menuManager Pointeur vers le menu manager content les menus
+ */
+void initMenuGraphics( MenuManager* menuManager );
+
+
+/*!
  * \brief S'assure que le Game Manager se ferme correctement
  * @param gm Pointeur vers Game Manager qui doit être fermé
  */

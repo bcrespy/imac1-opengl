@@ -12,13 +12,15 @@
 
 #include "VideoManager.h"
 #include "EventManager.h"
+#include "MathsComponents.h"
 #include "GeometryComponents.h"
 #include "Graphics.h"
 #include "ScoreManager.h"
+#include "GameObjects.h"
 
 
 static const unsigned int SEPARATION_BETWEEN_BUTTONS = 50;
-static const Vector2i BUTTON_SIZE = { 400, 50 };
+static const Vector2i BUTTON_SIZE = { 560, 83 };
 
 
 /*!
@@ -112,12 +114,17 @@ void initButton( MenuItem* button, unsigned int id, Rectanglei boundingRect, con
  */
 typedef struct menuobject
 {
-    char* title; //!< Titre du menu -- sera affiché tout en haut
+    char* texturePath; //!< Titre du menu -- sera affiché tout en haut
     MenuItem* items; //!< Liste des items du menu
     unsigned int nbItems; //!< Nombre d'items du menu
     const char* font; //!< Police des items du menu
     unsigned int hoveredItem; //!< ID du bouton hovered - 0 si aucun
+    unsigned int isSequence; //!< Si le background est une séquence ou non
     TextureInformations background; //!< Informations sur la texture background du menu
+    Sequence backgroundSprite; //!< Séquence de background du menu
+    Vector2i spriteSize; //!< Taille du background
+    TextureInformations buttonTexture; //!< Texture générique d'un bouton
+    TextureInformations buttonTextureHover; //!< Texture générique d'un bouton lors du hover
 }
 MenuObject;
 

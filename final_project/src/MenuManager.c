@@ -9,7 +9,6 @@ void agenceMenu( MenuObject* menu )
         menu->items[i].boundingRect.position.x = - menu->items[i].boundingRect.size.x / 2;
         topY+= menu->items[i].marginTop + menu->items[i].boundingRect.size.y;
     }
-
     currentY = topY / 2 - menu->items[0].boundingRect.size.y;
     for( i = 0; i < menu->nbItems; i++ )
     {
@@ -22,11 +21,12 @@ void agenceMenu( MenuObject* menu )
 
 void initMainMenu( MenuObject* menu )
 {
-    menu->font = "bin/basica.ttf";
+    menu->font = "bin/slimjoe.ttf";
 
-    menu->title = "";
+    menu->texturePath = "bin/menu";
     menu->nbItems = 0;
     menu->items = malloc( 0 );
+    menu->isSequence = 1;
 
     Rectanglei buttonBox;
     buttonBox.position.x = 0;
@@ -40,7 +40,7 @@ void initMainMenu( MenuObject* menu )
         ITEM_DEFAULT,
         buttonBox,
         0,
-        { 255, 0, 0 },
+        { 255, 255, 255 },
         "Start Game"
     };
     addItemToMenu( menu, startButton );
@@ -51,7 +51,7 @@ void initMainMenu( MenuObject* menu )
         ITEM_DEFAULT,
         buttonBox,
         50,
-        { 255, 0, 0 },
+        { 255, 255, 255 },
         "Options"
     };
     addItemToMenu( menu, optionsButton );
@@ -62,7 +62,7 @@ void initMainMenu( MenuObject* menu )
         ITEM_DEFAULT,
         buttonBox,
         50,
-        { 255, 0, 0 },
+        { 255, 255, 255 },
         "Highscores"
     };
     addItemToMenu( menu, highscoresButton );
@@ -73,7 +73,7 @@ void initMainMenu( MenuObject* menu )
         ITEM_DEFAULT,
         buttonBox,
         50,
-        { 255, 0, 0 },
+        { 255, 255, 255 },
         "Quit game"
     };
     addItemToMenu( menu, quitButton );
@@ -85,11 +85,12 @@ void initMainMenu( MenuObject* menu )
 void initScoreListMenu( MenuObject* menu, ScoreList* sl )
 {
     // chargement de la font
-    menu->font = "bin/arvo.ttf";
+    menu->font = "bin/slimjoe.ttf";
 
-    menu->title = "";
+    menu->texturePath = "";
     menu->nbItems = 0;
     menu->items = malloc( 0 );
+    menu->isSequence = 1;
 
     Rectanglei buttonBox;
     buttonBox.position.x = 0;
@@ -137,8 +138,8 @@ void initScoreListMenu( MenuObject* menu, ScoreList* sl )
         ITEM_BUTTON,
         ITEM_DEFAULT,
         buttonBox,
-        50,
-        { 255, 0, 0 },
+        100,
+        { 255, 255, 255 },
         "Back to main menu"
     };
     addItemToMenu( menu, backToMenu );
@@ -149,11 +150,12 @@ void initScoreListMenu( MenuObject* menu, ScoreList* sl )
 void initInGamePauseMenu( MenuObject* menu )
 {
     // chargement de la font
-    menu->font = "bin/arvo.ttf";
+    menu->font = "bin/slimjoe.ttf";
 
-    menu->title = "";
+    menu->texturePath = "bin/menu/00300.jpg";
     menu->nbItems = 0;
     menu->items = malloc( 0 );
+    menu->isSequence = 0;
 
     Rectanglei buttonBox;
     buttonBox.position.x = 0;
@@ -183,8 +185,8 @@ void initInGamePauseMenu( MenuObject* menu )
         ITEM_BUTTON,
         ITEM_DEFAULT,
         buttonBox,
-        50,
-        { 255, 0, 0 },
+        100,
+        { 255, 255, 255 },
         "Resume game"
     };
     addItemToMenu( menu, backToGame );
@@ -195,7 +197,7 @@ void initInGamePauseMenu( MenuObject* menu )
         ITEM_DEFAULT,
         buttonBox,
         50,
-        { 255, 0, 0 },
+        { 255, 255, 255 },
         "Back to main menu"
     };
     addItemToMenu( menu, backToMenu );
@@ -206,7 +208,7 @@ void initInGamePauseMenu( MenuObject* menu )
         ITEM_DEFAULT,
         buttonBox,
         50,
-        { 255, 0, 0 },
+        { 255, 255, 255 },
         "Exit game"
     };
     addItemToMenu( menu, exitGame );
@@ -218,11 +220,12 @@ void initInGamePauseMenu( MenuObject* menu )
 void initGameOverMenu( MenuObject* menu )
 {
     // chargement de la font
-    menu->font = "bin/arvo.ttf";
+    menu->font = "bin/slimjoe.ttf";
 
-    menu->title = "";
+    menu->texturePath = "bin/menu/00300.jpg";
     menu->nbItems = 0;
     menu->items = malloc( 0 );
+    menu->isSequence = 0;
 
     Rectanglei buttonBox;
     buttonBox.position.x = 0;
@@ -252,8 +255,8 @@ void initGameOverMenu( MenuObject* menu )
         ITEM_BUTTON,
         ITEM_DEFAULT,
         buttonBox,
-        50,
-        { 255, 0, 0 },
+        100,
+        { 255, 255, 255 },
         "Restart"
     };
     addItemToMenu( menu, restart );
@@ -264,7 +267,7 @@ void initGameOverMenu( MenuObject* menu )
         ITEM_DEFAULT,
         buttonBox,
         50,
-        { 255, 0, 0 },
+        { 255, 255, 255 },
         "Back to main menu"
     };
     addItemToMenu( menu, backToMain );
@@ -275,7 +278,7 @@ void initGameOverMenu( MenuObject* menu )
         ITEM_DEFAULT,
         buttonBox,
         50,
-        { 255, 0, 0 },
+        { 255, 255, 255 },
         "Exit game"
     };
     addItemToMenu( menu, exitGame );

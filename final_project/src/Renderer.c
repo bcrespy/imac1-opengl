@@ -49,6 +49,8 @@ void renderMenuFonts( MenuObject* menu )
     int i;
     TTF_Font* font = TTF_OpenFont( menu->font, 25 );
 
+    TTF_SetFontStyle( font, TTF_STYLE_BOLD );
+
     for( i = 0; i < menu->nbItems; i++ )
     {
         renderFont( &menu->items[i].fontTexture, menu->items[i].text, font, menu->items[i].fontColor );
@@ -57,6 +59,23 @@ void renderMenuFonts( MenuObject* menu )
     }
 
     TTF_CloseFont( font );
+}
+
+
+void renderMenuGraphics( MenuObject* menu )
+{
+    if( menu->isSequence )
+    {
+        menu->backgroundSprite.texturesList = loadSequence( menu->texturePath, &menu->backgroundSprite.nbTextures, &menu->spriteSize, 0 );
+        menu->backgroundSprite.currentTexture = 0;
+    }
+    else
+    {
+        menu->background.id = loadTexture( menu->texturePath, &menu->spriteSize, 0 );
+    }
+
+    menu->buttonTexture.id = loadTexture( "bin/buttonTexture.png", &menu->buttonTexture.size, 1 );
+    menu->buttonTextureHover.id = loadTexture( "bin/buttonTextureHover.png", &menu->buttonTextureHover.size, 1 );
 }
 
 
@@ -150,7 +169,7 @@ GLuint* loadSequence( const char folderpath[], int* nbFrames, Vector2i* textureS
     direc = opendir( folderpath );
 
     GLuint* texturesList = malloc( (*nbFrames) * sizeof(GLuint) );
-    char filepath[50];
+    char filepath[50] = "";
 
     // On charge les textures de la séquence
     int parser = 0;
@@ -343,35 +362,46 @@ void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSi
 }
 
 
-void updateMenuRender( MenuObject menu, Vector2i windowSize, int drawBackground )
+void updateMenuRender( MenuObject* menu, Vector2i windowSize, int drawBackground )
 {
     if( drawBackground )
         glClear( GL_COLOR_BUFFER_BIT );
 
+    // fond du menu
+    glEnable( GL_TEXTURE_2D );
+    if( menu->isSequence )
+        glBindTexture( GL_TEXTURE_2D, getNextTextureFromSequence( &menu->backgroundSprite ) );
+    else
+        glBindTexture( GL_TEXTURE_2D, menu->background.id );
+    renderRect( gameCooriToGLCoor( menu->spriteSize, windowSize ), 1 );
+    glDisable( GL_TEXTURE_2D );
+
     int i = 0;
-    for( ; i < menu.nbItems; i++ )
+    for( ; i < menu->nbItems; i++ )
     {
-        if( menu.items[i].type == ITEM_BUTTON )
+        if( menu->items[i].type == ITEM_BUTTON )
         {
-            if( menu.items[i].state == ITEM_DEFAULT )
-                glColor3f( 1.0, 1.0, 1.0 );
+            glEnable( GL_TEXTURE_2D );
+            if( menu->items[i].state == ITEM_DEFAULT )
+                glBindTexture( GL_TEXTURE_2D, menu->buttonTexture.id );
             else
-                glColor3f( 0.0, 1.0, 1.0 );
+                glBindTexture( GL_TEXTURE_2D, menu->buttonTextureHover.id );
 
             // Render du background de l'item
-            Vector2f pos = gameCooriToGLCoor( menu.items[i].boundingRect.position, windowSize );
-            Vector2f size = gameCooriToGLCoor( menu.items[i].boundingRect.size, windowSize );
+            Vector2f pos = gameCooriToGLCoor( menu->items[i].boundingRect.position, windowSize );
+            Vector2f size = gameCooriToGLCoor( menu->items[i].boundingRect.size, windowSize );
             Rectanglef rect = { pos, size };
             renderRectAtExactPosition( rect );
+            glDisable( GL_TEXTURE_2D );
         }
 
         // Render du texte de l'item
-        Vector2f txtPos = gameCooriToGLCoor( menu.items[i].fontTexturePosition, windowSize );
-        Vector2f txtSize = gameCooriToGLCoor( menu.items[i].fontTexture.size, windowSize );
+        Vector2f txtPos = gameCooriToGLCoor( menu->items[i].fontTexturePosition, windowSize );
+        Vector2f txtSize = gameCooriToGLCoor( menu->items[i].fontTexture.size, windowSize );
         Rectanglef textRect = { txtPos, txtSize };
         glEnable( GL_TEXTURE_2D );
         glColor3f( 1.0f, 1.0f, 1.0f );
-        glBindTexture( GL_TEXTURE_2D, menu.items[i].fontTexture.id );
+        glBindTexture( GL_TEXTURE_2D, menu->items[i].fontTexture.id );
         renderRectAtExactPosition( textRect );
         glDisable( GL_TEXTURE_2D );
     }
