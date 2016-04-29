@@ -14,6 +14,7 @@
 
 
 #define MAX_WALL_OBJECTS 5000
+#define MAX_PORTAL_OBJECTS 60
 
 
 /*!
@@ -22,7 +23,8 @@
 typedef enum groundtype
 {
     NO_GROUND,
-    WALL
+    WALL,
+    END_LINE
 }
 GroundType;
 
@@ -77,8 +79,9 @@ PlayerObject;
 /*!
  * \brief Initialise les différentes variables du joueur à t0
  * @param player Référence vers l'objet du joueur
+ * @param position Position à laquelle le joueur doit être initialisée
  */
-void initPlayerData( PlayerObject* player );
+void initPlayerData( PlayerObject* player, Vector2i position );
 
 /*!
  * \brief Désalloue les informations de la structure joueur
@@ -92,11 +95,11 @@ void freePlayerData( PlayerObject* player );
  */
 typedef struct mapobject
 {
-    //Vector2f position;
     Vector2i size; //!< Taille de la carte
     GLuint texture; //!< ID openGL lié à la texture de la carte
     float proportion; //!< height/width
     GroundType** ground; //!< Tableau 2D des informations de la carte
+    Vector2i startPosition; //!< Position de départ du joueur
 }
 MapObject;
 
@@ -107,12 +110,33 @@ MapObject;
 void freeMapObject( MapObject* map );
 
 
+
+typedef enum portalstate
+{
+    PORTAL_ON, PORTAL_DESTROYED, PORTAL_OFF
+}
+PortalState;
+
+/*!
+ * Contient les informations d'un portail
+ */
+typedef struct portalobject
+{
+    Vector2i position; //!< Centre du portail
+    Vector2i size; //!< Taille du portail (le rayon est déterminé à partir de ça)
+    GLuint texture; //!< Texture du portail
+    Rectanglei bounding; //!< Rectangle de collision du portail
+    PortalState state; //!< Statut du portail
+}
+PortalObject;
+
+
 /*!
  * Contient les informations sur la position d'un mur
  */
 typedef struct wallobject
 {
-    Vector2f position; //!<< Position du pixel mur
+    Vector2f position; //!< Position du pixel mur
 }
 WallObject;
 
@@ -139,11 +163,9 @@ typedef struct gameobjects
     CameraObject camera; //!< Caméra principale
     PlayerObject player; //!< Joueur principal
     MapObject map; //!< Map courante
-
-    MapDivision** mapDivision; //!< Tableau 2D de la division de la map en carrés
-
-    WallObject walls[MAX_WALL_OBJECTS]; //!< Liste des murs pour les collisions
-    int wallsNb; //!< Nombre d'objets mur
+    PortalObject portals[MAX_PORTAL_OBJECTS]; //!< Liste des portails
+    unsigned int portalsNb; //!< Nombre de portails
+    unsigned int portalsTaken; //!< Nombre de portails pris
 }
 GameObjects;
 
@@ -152,6 +174,20 @@ GameObjects;
  * @param go Pointeur vers le GameObjects principal
  */
 void initGameObjects( GameObjects* go );
+
+/*!
+ * \brief Change le state d'un portal
+ * @param portal Pointeur vers le portail à modifier
+ * @param state Nouvel état du portail
+ */
+void setPortalState( PortalObject* portal, PortalState state );
+
+/*!
+ * \brief Change le statut de tous les portails
+ * @param go Pointeur vers le Game Object
+ * @param state Nouveau statut
+ */
+void setAllPortalState( GameObjects* go, PortalState state );
 
 
 #endif

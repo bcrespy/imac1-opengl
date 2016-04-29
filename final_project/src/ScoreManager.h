@@ -70,6 +70,13 @@ typedef struct scorelist
 ScoreList;
 
 /*!
+ * \brief Ajoute une score à la fin d'une score list
+ * @param sl Pointeur vers la score liste dans laquelle le score doit être rajouté
+ * @param newScore Score à ajouter à la liste
+ */
+void addScore( ScoreList* sl, unsigned int newScore );
+
+/*!
  * \brief Charge les scores enregistrés dans un fichier
           Les scores sont stockés par odre décroissant dans la liste
  * @param sl Pointeur vers la liste de scores

@@ -44,6 +44,7 @@ void startGame( GameManager* gm )
     gm->state = ON_GAME;
     initGameObjects( &gm->objects );
     initScoreManager( &gm->scoreManager );
+    setAllPortalState( &gm->objects, PORTAL_ON );
 }
 
 
@@ -71,14 +72,13 @@ void closeGameManager( GameManager* gm )
     freeGraphics();
     freeMapObject( &gm->objects.map );
     freePlayerData( &gm->objects.player );
-    saveScore( &gm->scoreManager );
 }
 
 
 void updateFrame( GameManager* gm )
 {
     updateEvents( &gm->eventManager, &gm->window );
-    handleGameEvents( gm );
+    handleGlobalEvents( gm );
 
     unsigned int action = 0;
 
@@ -108,7 +108,7 @@ void updateFrame( GameManager* gm )
             updatePlayerPosition( &gm->objects.player );
             updateCameraPosition( &gm->objects.camera, gm->objects.player );
 /*SCORE*/
-            gm->scoreManager.currentScore+= 0.1;
+            gm->scoreManager.currentScore+= 0.3;
             renderScoreFonts( &gm->scoreManager );
             updateScorePosition( &gm->scoreManager, &gm->window );
 /*SCORE*/
@@ -116,8 +116,54 @@ void updateFrame( GameManager* gm )
 
             updateGameRender( &gm->objects, &gm->scoreManager, gm->window.screenSize, 0 );
 
-            if( isPlayerCollidingWall( &gm->objects, &collid ) )
-                gm->state = ON_DEATH_SCREEN;
+            GroundType gdType;
+            if( isPlayerColliding( &gm->objects, &collid, &gdType ) )
+            {
+                if( gdType == WALL )
+                {
+                    char* t = "You hit a wall";
+                    strncpy( gm->menuManager.gameOvermenu.items[1].text, t, sizeof(gm->menuManager.gameOvermenu.items[1].text) );
+                    renderMenuFonts( &gm->menuManager.gameOvermenu );
+                    renderMenuGraphics( &gm->menuManager.gameOvermenu );
+                    gm->state = ON_DEATH_SCREEN;
+                }
+                else if( gdType == END_LINE )
+                {
+                    // DECLENCHER ECRAN WIN
+                    if( gm->objects.portalsTaken / (float)gm->objects.portalsNb > 0.5f )
+                    {
+                        addScore( &gm->scoreList, (int)gm->scoreManager.currentScore );
+                        saveScore( &gm->scoreManager );
+
+                        MenuObject newScores;
+                        initScoreListMenu( &newScores, &gm->scoreList );
+                        gm->menuManager.scoresMenu = newScores;
+                        renderMenuFonts( &gm->menuManager.scoresMenu );
+                        gm->menuManager.scoresMenu.backgroundSprite = gm->menuManager.mainMenu.backgroundSprite;
+                        gm->menuManager.scoresMenu.spriteSize = gm->menuManager.mainMenu.spriteSize;
+                        gm->menuManager.scoresMenu.buttonTexture.id = loadTexture( "bin/buttonTexture.png", &gm->menuManager.scoresMenu.buttonTexture.size, 1 );
+                        gm->menuManager.scoresMenu.buttonTextureHover.id = loadTexture( "bin/buttonTextureHover.png", &gm->menuManager.scoresMenu.buttonTextureHover.size, 1 );
+
+                        gm->state = ON_MAIN_MENU;
+                    }
+                    else
+                    {
+                        char* t = "You have to take at least half of the portals";
+                        strncpy( gm->menuManager.gameOvermenu.items[1].text, t, sizeof(gm->menuManager.gameOvermenu.items[1].text) );
+                        renderMenuFonts( &gm->menuManager.gameOvermenu );
+                        renderMenuGraphics( &gm->menuManager.gameOvermenu );
+                        gm->state = ON_DEATH_SCREEN;
+                    }
+                }
+            }
+
+            unsigned int portalID;
+            if( isPlayerCollidingPortal( &gm->objects, &portalID ) )
+            {
+                setPortalState( &gm->objects.portals[portalID], PORTAL_OFF );
+                gm->objects.portalsTaken++;
+                gm->scoreManager.currentScore-= 10;
+            }
 
         break;
 
@@ -133,6 +179,7 @@ void updateFrame( GameManager* gm )
         break;
 
         case ON_DEATH_SCREEN :
+            handleDeathscreenEvents( gm );
             action = handleMenuEvents( &gm->menuManager.gameOvermenu, gm->window, &gm->eventManager );
             if( action )
                 itemAction( action, gm );
@@ -141,20 +188,23 @@ void updateFrame( GameManager* gm )
             updateMenuRender( &gm->menuManager.gameOvermenu, gm->window.screenSize, 0 );
         break;
     }
+}
 
-    /*
-    if( gm->onPause == 0 )
+
+void handleGlobalEvents( GameManager* gm )
+{
+    if( isKeyDown( &gm->eventManager, SDLK_q ) )
+        closeGameManager( gm );
+
+    // gestion de la taille de la fenêtre
+    if( gm->eventManager.resized )
     {
-        updatePlayerPosition( &gm->objects.player );
-        updateCameraPosition( &gm->objects.camera, gm->objects.player );
+        resizeWindow( &gm->window );
+        gm->eventManager.resized = 0;
+    }
 
-        Vector2i collid;
-
-        updateGameRender( &gm->objects, gm->window.screenSize );
-
-        if( isPlayerCollidingWall( &gm->objects, &collid ) )
-            gm->onPause = 1;
-    }*/
+    if( gm->eventManager.closeEvent )
+        closeGameManager( gm );
 }
 
 
@@ -173,19 +223,16 @@ void handleGameEvents( GameManager* gm )
 
     if( isKeyDown( &gm->eventManager, SDLK_ESCAPE ) )
         gm->state = ON_PAUSE;
+}
 
-    if( isKeyDown( &gm->eventManager, SDLK_q ) )
-        closeGameManager( gm );
 
-    // gestion de la taille de la fenêtre
-    if( gm->eventManager.resized )
+void handleDeathscreenEvents( GameManager* gm )
+{
+    if( isKeyDown( &gm->eventManager, SDLK_r ) )
     {
-        resizeWindow( &gm->window );
-        gm->eventManager.resized = 0;
+        clearMenuItems( &gm->menuManager.gameOvermenu );
+        startGame( gm );
     }
-
-    if( gm->eventManager.closeEvent )
-        closeGameManager( gm );
 }
 
 

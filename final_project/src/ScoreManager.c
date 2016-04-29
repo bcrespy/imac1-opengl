@@ -60,12 +60,32 @@ void getScoreList( ScoreList* sl )
 }
 
 
+void addScore( ScoreList* sl, unsigned int newScore )
+{
+    if( sl->scoresNb > 10 )
+    {
+        if( sl->scores[9] < newScore )
+        {
+            sl->scores[9] = newScore;
+            sortScores( sl );
+        }
+    }
+    else
+    {
+        sl->scoresNb++;
+        sl->scores = (unsigned int*)realloc( sl->scores, sl->scoresNb*sizeof(unsigned int) );
+        sl->scores[sl->scoresNb-1] = newScore;
+        sortScores( sl );
+    }
+}
+
+
 void sortScores( ScoreList* sl )
 {
     int i, _i;
     for( _i = 0; _i < sl->scoresNb; _i++ )
         for( i = 0 ; i < sl->scoresNb-1; i++ )
-            if( sl->scores[i] < sl->scores[i+1] )
+            if( sl->scores[i] > sl->scores[i+1] )
             {
                 unsigned int inter = 0;
                 inter = sl->scores[i];

@@ -85,10 +85,22 @@ void updateFrame( GameManager* gm );
 
 
 /*!
+ * \brief Récupère les évènements et les gères
+ * @param gm Pointeur vers le Game Manager
+ */
+void handleGlobalEvents( GameManager* gm );
+
+/*!
  * \brief Recupère les évènements et leur associe une action
  * @param gm Pointeur vers le Game Manager
  */
 void handleGameEvents( GameManager* gm );
+
+/*!
+ * \brief Gère les évènements du death screen
+ * @param gm Pointeur vers le game manager
+ */
+void handleDeathscreenEvents( GameManager* gm );
 
 
 /*!

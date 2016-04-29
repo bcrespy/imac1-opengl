@@ -31,6 +31,7 @@ GroundType** loadMAP( const char filename[], GameObjects* objects )
     }
 
     int x, y;
+    unsigned int nbPortals = 0;
 
     // On alloue
     GroundType** ground = malloc( surface->w * sizeof( GroundType* ) );
@@ -52,10 +53,33 @@ GroundType** loadMAP( const char filename[], GameObjects* objects )
             if( r == 173 && g == 0 && b == 0 )
             {
                 // On inverse le repère y pour correspondre au repère du jeu
-                ground[i][surface->h-j] = WALL;
+                ground[i][surface->h - j] = WALL;
+            }
+
+            // Si le pixel est vert = portail
+            if( r == 0 && g == 255 && b == 0 )
+            {
+                objects->portals[nbPortals].position.x = i;
+                objects->portals[nbPortals].position.y = surface->h - j;
+                nbPortals++;
+            }
+
+            // Si le pixel est bleu = ligne arrivée
+            if( r == 0 && g == 0 && b == 255 )
+            {
+                ground[i][surface->h-j] = END_LINE;
+            }
+
+            // Si le pixel est jaune = point de départ
+            if( r == 255 && g == 255 && b == 0 )
+            {
+                objects->map.startPosition.x = i;
+                objects->map.startPosition.y = surface->h - j;
             }
         }
     }
+
+    objects->portalsNb = nbPortals;
 
     /*
     for( y = 0; y < surface->h; y++ )
@@ -127,7 +151,7 @@ Polygonei getColliderFromFile( const char filename[] )
 }
 
 
-unsigned int isPlayerCollidingWall( GameObjects* objects, Vector2i* position )
+unsigned int isPlayerColliding( GameObjects* objects, Vector2i* position, GroundType* type )
 {
     int xStart = objects->player.position.x - BOX_SIZE_COLLISION / 2;
     int yStart = objects->player.position.y - BOX_SIZE_COLLISION / 2;
@@ -160,12 +184,62 @@ unsigned int isPlayerCollidingWall( GameObjects* objects, Vector2i* position )
                 if( isPointInPolygonei( wallPosition, playerColliderTranslated ) )
                 {
                     printf("COLLID en [%i;%i]\n", i, j);
+                    *type = WALL;
+                    return 1;
+                }
+            }
+            else if( objects->map.ground[i][j] == END_LINE )
+            {
+                Vector2i linePosition = { i, j };
+
+                if( isPointInPolygonei( linePosition, playerColliderTranslated ) )
+                {
+                    *type = END_LINE;
                     return 1;
                 }
             }
         }
     }
 
+    return 0;
+}
+
+
+unsigned int isPlayerCollidingPortal( GameObjects* objects, unsigned int* portalID )
+{
+    int i;
+    for( i = 0; i < objects->portalsNb; i++ )
+    {
+        // Si les deux objets sont suffisemment proche pour traiter la collision, on la traite
+        if( objects->portals[i].state == PORTAL_ON &&
+            sqrt( pow((objects->portals[i].position.x - objects->player.position.x), 2) + pow((objects->portals[i].position.y - objects->player.position.y), 2) ) <=
+            BOX_SIZE_COLLISION/2 + objects->portals[i].bounding.size.x/2 )
+        {
+            // Test de collision approfondi
+            Polygonei rotatedPolygone;
+
+            Vector2i center = { 0, 0 };
+
+            getRotatedPolygone( objects->player.collider, center, objects->player.angle, &rotatedPolygone );
+
+            Vector2i translation = { objects->player.position.x , objects->player.position.y };
+
+            Polygonei playerColliderTranslated;
+            getTranslatedPolygone( rotatedPolygone, translation, &playerColliderTranslated );
+
+            // On teste s'il y a une collision entre le polygone et le cercle
+            Circlei portalCollider;
+            portalCollider.radius = objects->portals[i].bounding.size.x/2;
+            portalCollider.position.x = objects->portals[i].position.x;
+            portalCollider.position.y = objects->portals[i].position.y;
+
+            if( isPolygoneCollidingCircle(playerColliderTranslated, portalCollider) )
+            {
+                *portalID = i;
+                return 1;
+            }
+        }
+    }
     return 0;
 }
 

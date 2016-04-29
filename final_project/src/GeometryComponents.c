@@ -54,3 +54,80 @@ int intersectSegment( Segmenti seg1, Segmenti seg2 )
 
     return 1;
 }
+
+
+unsigned int isPointCollidingCircle( Vector2i A, Circlei C )
+{
+    if( sqrt( (C.position.x - A.x)*(C.position.x - A.x)  + (C.position.y - A.y)*(C.position.y - A.y) ) <= C.radius )
+        return 1;
+    else
+        return 0;
+}
+
+
+unsigned int isLineCollidingCircle( Vector2i A, Vector2i B, Circlei circle )
+{
+    Vector2i u;
+    u.x = B.x - A.x;
+
+    Vector2i AC;
+    AC.x = circle.position.x - A.x;
+    AC.y = circle.position.y - A.y;
+
+    float num = u.x*(float)AC.y -u.y*(float)AC.x;
+    if( num < 0 )
+        num = -num;
+    float denom = sqrt( u.x*u.x + u.y*u.y );
+    float CI = num / denom;
+    if( CI < circle.radius )
+        return 1;
+    else
+        return 0;
+}
+
+
+unsigned int isSegmentCollidingCircle( Vector2i A, Vector2i B, Circlei circle )
+{
+    if( isLineCollidingCircle( A, B, circle ) == 0 )
+        return 0;
+
+    Vector2i AB, AC, BC;
+    AB.x = B.x - A.x;
+    AB.y = B.y - A.y;
+    AC.x = circle.position.x - A.x;
+    AC.y = circle.position.y - A.y;
+    BC.x = circle.position.x - B.x;
+    BC.y = circle.position.y - B.y;
+
+    float pscal1 = AB.x*AC.x + AB.y*AC.y;  // produit scalaire
+    float pscal2 = (-AB.x)*BC.x + (-AB.y)*BC.y;  // produit scalaire
+
+    if( pscal1 >= 0 && pscal2 >= 0 )
+        return 1;
+
+    if( isPointCollidingCircle(A, circle) )
+        return 1;
+    if( isPointCollidingCircle(B, circle) )
+        return 1;
+
+    return 0;
+}
+
+
+unsigned int isPolygoneCollidingCircle( Polygonei poly, Circlei circle )
+{
+    int i;
+    for( i = 0; i < poly.nbPoints; i++ )
+    {
+        unsigned int lastPointIndex = (i==poly.nbPoints-1) ? 0 : i+1;
+        Segmenti polySegment;
+        polySegment.pt1.x = poly.points[i].x;
+        polySegment.pt1.y = poly.points[i].y;
+        polySegment.pt2.x = poly.points[lastPointIndex].x;
+        polySegment.pt2.y = poly.points[lastPointIndex].y;
+
+        if( isSegmentCollidingCircle( poly.points[i], poly.points[lastPointIndex], circle ) )
+            return 1;
+    }
+    return 0;
+}

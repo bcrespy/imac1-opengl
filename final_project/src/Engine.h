@@ -62,7 +62,16 @@ void updateCameraPosition( CameraObject* camera, PlayerObject player );
  * @param position Position de la collsion s'il y en a une
  * @return 0 si le player n'est pas en collsion, 1 s'il l'est
  */
-unsigned int isPlayerCollidingWall( GameObjects* objects, Vector2i* position );
+unsigned int isPlayerColliding( GameObjects* objects, Vector2i* position, GroundType* type );
+
+
+/*!
+ * \brief Calcule si le joueur est en collision avec un portail
+ * @param objects Pointeur vers la structure contenant les objets du jeu
+ * @param portalID Identifiant du portail en collision
+ * @return 0 si le player n'est pas en collsion, 1 s'il l'est
+ */
+unsigned int isPlayerCollidingPortal( GameObjects* objects, unsigned int* portalID );
 
 
 /*!

@@ -54,6 +54,14 @@ void loadGraphics( GameObjects* objects );
 
 
 /*!
+ * \brief Charge les textures des portails
+ * @params portals Tableau des portails
+ * @params nbPortals Nombre de portails
+ */
+void loadPortalsGraphics( PortalObject* portals, unsigned int nbPortals );
+
+
+/*!
  * \brief Charge une police font, génère la texture correspondant
           et stocke les informations dans texture
  * @param texture Pointeur vers les informations de texture

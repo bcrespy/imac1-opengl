@@ -121,6 +121,7 @@ typedef struct menuobject
     unsigned int hoveredItem; //!< ID du bouton hovered - 0 si aucun
     unsigned int isSequence; //!< Si le background est une séquence ou non
     TextureInformations background; //!< Informations sur la texture background du menu
+    int backgroundAlpha; //!< Si le background a une couche Alpha
     Sequence backgroundSprite; //!< Séquence de background du menu
     Vector2i spriteSize; //!< Taille du background
     TextureInformations buttonTexture; //!< Texture générique d'un bouton

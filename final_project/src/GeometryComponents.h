@@ -105,4 +105,49 @@ void getTranslatedPolygone( Polygonei poly, Vector2i translation, Polygonei* pol
 void getRotatedPolygone( Polygonei poly, Vector2i center, float angle, Polygonei* polyRet );
 
 
+/*!
+ * Cercle dans N
+ */
+typedef struct circlei
+{
+    Vector2i position; //!< Centre du cercle
+    unsigned int radius; //!< Rayon du cercle
+}
+Circlei;
+
+/*!
+ * \brief Calcule si le point A est à l'intérieur du cercle
+ * @param A Point à tester
+ * @param circle Cercle à tester
+ * @return 1 s'il est à l'inétieur, 0 s'il ne n'est pas
+ */
+unsigned int isPointCollidingCircle( Vector2i A, Circlei C );
+
+/*!
+ * \brief Calcule si la droite est en collision avec le cercle
+ * @param A Point appartenant à la droite
+ * @param B Point appartenant à la droite
+ * @param circle Cercle à tester
+ * @return 1 si collision, 0 si pas de collision
+ */
+unsigned int isLineCollidingCircle( Vector2i A, Vector2i B, Circlei circle );
+
+/*!
+ * \brief Calcule si le segment est en collision avec le cercle
+ * @param A Somment du segment
+ * @param B Somment du segment
+ * @param circle Cercle à tester
+ * @return 1 si collision, 0 si pas de collision
+ */
+unsigned int isSegmentCollidingCircle( Vector2i A, Vector2i B, Circlei circle );
+
+/*!
+ * \brief Calcule si un polygone est en collision avec un cercle
+ * @param poly Polygone à tester
+ * @param circle Cercle à tester
+ * @return 0 si pas de collision, 1 si c'est le cas
+ */
+unsigned int isPolygoneCollidingCircle( Polygonei poly, Circlei circle );
+
+
 #endif

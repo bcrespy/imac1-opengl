@@ -23,8 +23,28 @@ void loadGraphics( GameObjects* objects )
     objects->player.size.x = size.x;
     objects->player.size.y = size.y;
     loadMapGraphics( &objects->map, "bin/map.png" );
+    loadPortalsGraphics( objects->portals, objects->portalsNb );
     //objects->player.sprite.texturesList = loadSequence( "bin/menu", &objects->player.sprite.nbTextures, &objects->player.size, 0 );
     //objects->player.sprite.currentTexture = 0;
+}
+
+
+void loadPortalsGraphics( PortalObject* portals, unsigned int nbPortals )
+{
+    int i;
+    Vector2i size;
+    GLuint textureID = loadTexture( "bin/portal.png", &size, 1 );
+
+    for( i = 0; i < nbPortals; i++ )
+    {
+        portals[i].size.x = size.x;
+        portals[i].size.y = size.y;
+        portals[i].texture = textureID;
+        portals[i].bounding.position.x = portals[i].position.x - portals[i].size.x / 2;
+        portals[i].bounding.position.y = portals[i].position.y - portals[i].size.y / 2;
+        portals[i].bounding.size.x = size.x;
+        portals[i].bounding.size.y = size.y;
+    }
 }
 
 
@@ -66,12 +86,12 @@ void renderMenuGraphics( MenuObject* menu )
 {
     if( menu->isSequence )
     {
-        menu->backgroundSprite.texturesList = loadSequence( menu->texturePath, &menu->backgroundSprite.nbTextures, &menu->spriteSize, 0 );
+        menu->backgroundSprite.texturesList = loadSequence( menu->texturePath, &menu->backgroundSprite.nbTextures, &menu->spriteSize, menu->backgroundAlpha );
         menu->backgroundSprite.currentTexture = 0;
     }
     else
     {
-        menu->background.id = loadTexture( menu->texturePath, &menu->spriteSize, 0 );
+        menu->background.id = loadTexture( menu->texturePath, &menu->spriteSize, menu->backgroundAlpha );
     }
 
     menu->buttonTexture.id = loadTexture( "bin/buttonTexture.png", &menu->buttonTexture.size, 1 );
@@ -85,8 +105,9 @@ void renderScoreFonts( ScoreManager* sm )
     {
         char str[20];
         sprintf( str, "SCORE : %d", (int)sm->currentScore );
-        TTF_Font* font = TTF_OpenFont( "bin/arvo.ttf", 25 );
-        SDL_Color color = { 255, 0, 0 };
+        TTF_Font* font = TTF_OpenFont( "bin/slimjoe.ttf", 25 );
+        TTF_SetFontStyle( font, TTF_STYLE_BOLD );
+        SDL_Color color = { 255, 255, 255 };
         renderFont( &sm->texture, str, font, color );
         TTF_CloseFont( font );
     }
@@ -308,6 +329,23 @@ void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSi
     renderRect( gameCooriToGLCoor( objects->map.size, windowSize ), 0 );
     glDisable( GL_TEXTURE_2D );
 /* FIN RENDU MAP*/
+
+/* RENDU PORTAILS */
+    int i;
+    for( i = 0; i < objects->portalsNb; i++ )
+    {
+        if( objects->portals[i].state == PORTAL_ON )
+        {
+            glEnable( GL_TEXTURE_2D );
+            glBindTexture( GL_TEXTURE_2D, objects->portals[i].texture );
+            Vector2f pos = gameCooriToGLCoor( objects->portals[i].bounding.position, windowSize );
+            Vector2f size = gameCooriToGLCoor( objects->portals[i].bounding.size, windowSize );
+            Rectanglef rect = { pos, size };
+            renderRectAtExactPosition( rect );
+            glDisable( GL_TEXTURE_2D );
+        }
+    }
+/* FIN RENDU PORTAILS */
 
 /* RENDU PLAYER */
     glPushMatrix();

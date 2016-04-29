@@ -8,10 +8,10 @@ void initCameraData( CameraObject* camera )
 }
 
 
-void initPlayerData( PlayerObject* player )
+void initPlayerData( PlayerObject* player, Vector2i position )
 {
-    player->position.x = 200;
-    player->position.y = 200;
+    player->position.x = (float)position.x;
+    player->position.y = (float)position.y;
     player->velocity.x = 0;
     player->velocity.y = 0;
     player->motor.x = 0;
@@ -30,8 +30,22 @@ void freePlayerData( PlayerObject* player )
 void initGameObjects( GameObjects* go )
 {
     initCameraData( &go->camera );
-    initPlayerData( &go->player );
-    go->wallsNb = 0;
+    initPlayerData( &go->player, go->map.startPosition );
+    go->portalsTaken = 0;
+}
+
+
+void setPortalState( PortalObject* portal, PortalState state )
+{
+    portal->state = state;
+}
+
+
+void setAllPortalState( GameObjects* go, PortalState state )
+{
+    int i;
+    for( i = 0; i < go->portalsNb; i++ )
+        go->portals[i].state = state;
 }
 
 

@@ -27,6 +27,7 @@ void initMainMenu( MenuObject* menu )
     menu->nbItems = 0;
     menu->items = malloc( 0 );
     menu->isSequence = 1;
+    menu->backgroundAlpha = 0;
 
     Rectanglei buttonBox;
     buttonBox.position.x = 0;
@@ -91,6 +92,7 @@ void initScoreListMenu( MenuObject* menu, ScoreList* sl )
     menu->nbItems = 0;
     menu->items = malloc( 0 );
     menu->isSequence = 1;
+    menu->backgroundAlpha = 0;
 
     Rectanglei buttonBox;
     buttonBox.position.x = 0;
@@ -152,10 +154,11 @@ void initInGamePauseMenu( MenuObject* menu )
     // chargement de la font
     menu->font = "bin/slimjoe.ttf";
 
-    menu->texturePath = "bin/menu/00300.jpg";
+    menu->texturePath = "bin/pause_bg.png";
     menu->nbItems = 0;
     menu->items = malloc( 0 );
     menu->isSequence = 0;
+    menu->backgroundAlpha = 1;
 
     Rectanglei buttonBox;
     buttonBox.position.x = 0;
@@ -226,6 +229,7 @@ void initGameOverMenu( MenuObject* menu )
     menu->nbItems = 0;
     menu->items = malloc( 0 );
     menu->isSequence = 0;
+    menu->backgroundAlpha = 0;
 
     Rectanglei buttonBox;
     buttonBox.position.x = 0;
@@ -250,12 +254,34 @@ void initGameOverMenu( MenuObject* menu )
     };
     addItemToMenu( menu, title );
 
+    MenuItem overMsg = {
+        600,
+        ITEM_TEXT,
+        ITEM_DEFAULT,
+        textBox,
+        20,
+        { 255, 255, 255 },
+        "message to be shown when game is over"
+    };
+    addItemToMenu( menu, overMsg );
+
+    MenuItem restartInfo = {
+        601,
+        ITEM_TEXT,
+        ITEM_DEFAULT,
+        textBox,
+        20,
+        { 255, 255, 255 },
+        "Press R to restart"
+    };
+    addItemToMenu( menu, restartInfo );
+
     MenuItem restart = {
         41,
         ITEM_BUTTON,
         ITEM_DEFAULT,
         buttonBox,
-        100,
+        150,
         { 255, 255, 255 },
         "Restart"
     };
