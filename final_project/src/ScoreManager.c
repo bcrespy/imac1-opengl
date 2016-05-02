@@ -64,7 +64,7 @@ void addScore( ScoreList* sl, unsigned int newScore )
 {
     if( sl->scoresNb > 10 )
     {
-        if( sl->scores[9] < newScore )
+        if( sl->scores[9] > newScore )
         {
             sl->scores[9] = newScore;
             sortScores( sl );

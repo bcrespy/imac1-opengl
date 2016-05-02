@@ -9,6 +9,7 @@ void initWindow( Window* window )
     window->screenRatio = window->screenSize.y / (float)window->screenSize.x;
     SDL_WM_SetCaption( "Jeu super bien", NULL );
     resizeWindow( window );
+    SDL_ShowCursor( SDL_DISABLE );
 }
 
 

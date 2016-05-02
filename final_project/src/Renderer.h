@@ -151,9 +151,8 @@ Vector2f gameCooriToGLCoor( Vector2i vec, Vector2i windowSize );
  * @param gm Game Manager
  * @param sm Pointeur vers le score manager
  * @param windowSize Taille de la fenêtre
- * @param onPause Booléen qui indique si le jeu est en pause ou non
  */
-void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSize, int onPause );
+void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSize );
 
 
 /*!
@@ -163,6 +162,16 @@ void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSi
  * @param background Booléen s'il faut dessiner un fond ou non
  */
 void updateMenuRender( MenuObject* menu, Vector2i windowSize, int drawBackground );
+
+
+/*!
+ * \brief Fonction appelée à chaque frame du contexte
+ *        Met à jour l'affichage du curseur
+ * @param cursor Informations sur la texture du curseur
+ * @param position Position du curseur
+ * @param windowSize Taille de la fenêtre
+ */
+void updateCursorRender( TextureInformations cursor, Vector2i position, Vector2i windowSize );
 
 
 /*!

@@ -67,18 +67,17 @@ void renderFont( TextureInformations* texture, const char* text, TTF_Font* font,
 void renderMenuFonts( MenuObject* menu )
 {
     int i;
-    TTF_Font* font = TTF_OpenFont( menu->font, 25 );
-
-    TTF_SetFontStyle( font, TTF_STYLE_BOLD );
 
     for( i = 0; i < menu->nbItems; i++ )
     {
+        TTF_Font* font = TTF_OpenFont( menu->font, menu->items[i].fontSize );
+
         renderFont( &menu->items[i].fontTexture, menu->items[i].text, font, menu->items[i].fontColor );
         menu->items[i].fontTexturePosition.x = - (menu->items[i].fontTexture.size.x/2);
         menu->items[i].fontTexturePosition.y = menu->items[i].boundingRect.position.y + (menu->items[i].boundingRect.size.y - menu->items[i].fontTexture.size.y) / 2 - 1;
-    }
 
-    TTF_CloseFont( font );
+        TTF_CloseFont( font );
+    }
 }
 
 
@@ -307,7 +306,7 @@ void renderPolygonei( Polygonei poly, Vector2i windowSize )
 }
 
 
-void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSize, int onPause )
+void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSize )
 {
     Vector2f playerPosGL = gameCoorfToGLCoor( objects->player.position, windowSize );
     Vector2f cameraPosGL = gameCoorfToGLCoor( objects->camera.position, windowSize );
@@ -393,10 +392,6 @@ void updateGameRender( GameObjects* objects, ScoreManager* sm, Vector2i windowSi
 /**
  FIN AFFICHAGE COLLIDER
 */
-
-    /* Echange du front et du back buffer : mise Ã  jour de la fenÃªtre */
-    if( !onPause )
-        SDL_GL_SwapBuffers();
 }
 
 
@@ -443,6 +438,19 @@ void updateMenuRender( MenuObject* menu, Vector2i windowSize, int drawBackground
         renderRectAtExactPosition( textRect );
         glDisable( GL_TEXTURE_2D );
     }
+}
 
-    SDL_GL_SwapBuffers();
+
+void updateCursorRender( TextureInformations cursor, Vector2i position, Vector2i windowSize )
+{
+    Vector2i mousePos = { position.x - windowSize.x / 2, - position.y + windowSize.y/2 - cursor.size.y };
+    Vector2f pos = gameCooriToGLCoor( mousePos, windowSize );
+    Vector2f size = gameCooriToGLCoor( cursor.size, windowSize );
+    Rectanglef rect = { pos, size };
+
+    glEnable( GL_TEXTURE_2D );
+    glColor3f( 1.0f, 1.0f, 1.0f );
+    glBindTexture( GL_TEXTURE_2D, cursor.id );
+    renderRectAtExactPosition( rect );
+    glDisable( GL_TEXTURE_2D );
 }

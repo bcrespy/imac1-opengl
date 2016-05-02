@@ -29,7 +29,8 @@ typedef enum GameState
     ON_GAME,
     ON_PAUSE,
     ON_DEATH_ANIMATION,
-    ON_DEATH_SCREEN
+    ON_DEATH_SCREEN,
+    ON_WIN
 }
 GameState;
 
@@ -50,7 +51,8 @@ typedef struct gamemanager
     MenuManager menuManager; //!< Informations sur les menus
     GameState state; //!< Statut du jeu (menu principal, en jeu, en pause...)
     ScoreManager scoreManager; //!< Informations sur le score du jeu
-    ScoreList scoreList; //! Liste des scores à afficher
+    ScoreList scoreList; //!< Liste des scores à afficher
+    TextureInformations cursor; //!< Informations sur la texture du curseur
 }
 GameManager;
 

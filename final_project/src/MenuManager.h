@@ -51,6 +51,12 @@ static const Vector2i BUTTON_SIZE = { 560, 83 };
  * 41 : Restart
  * 42 : Back to main menu
  * 43 : Exit game
+ * --------------
+ * 50 : Win menu
+ * 51 : Affichage score
+ * 52 : Restart
+ * 53 : Back to main menu
+ * 54 : exit game
  *
  */
 
@@ -91,6 +97,7 @@ typedef struct menuitem
     Rectanglei boundingRect; //!< Boite de collision de l'item, définit la zone d'intérêt
     unsigned int marginTop; //!< Marge supérieur de l'item
     SDL_Color fontColor; //!< Couleur du texte de l'item
+    unsigned int fontSize; //!< Taille de la police de l'item
     char text[255]; //!< Texte correspondant au menu
     TextureInformations fontTexture; //!< Informations sur la texture de la police
     Vector2i fontTexturePosition; //!< Nécessaire pour centrer le texte dans le bouton
@@ -210,6 +217,7 @@ typedef struct menumanager
     MenuObject scoresMenu; //!< Menu des top scores
     MenuObject inGamePauseMenu; //!< Menu de pause in-game
     MenuObject gameOvermenu; //!< Menu game over
+    MenuObject winMenu; //!< Menu de victoire de fin de parcours
 }
 MenuManager;
 

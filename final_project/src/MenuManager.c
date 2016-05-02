@@ -42,6 +42,7 @@ void initMainMenu( MenuObject* menu )
         buttonBox,
         0,
         { 255, 255, 255 },
+        30,
         "Start Game"
     };
     addItemToMenu( menu, startButton );
@@ -53,6 +54,7 @@ void initMainMenu( MenuObject* menu )
         buttonBox,
         50,
         { 255, 255, 255 },
+        30,
         "Options"
     };
     addItemToMenu( menu, optionsButton );
@@ -64,6 +66,7 @@ void initMainMenu( MenuObject* menu )
         buttonBox,
         50,
         { 255, 255, 255 },
+        30,
         "Highscores"
     };
     addItemToMenu( menu, highscoresButton );
@@ -75,6 +78,7 @@ void initMainMenu( MenuObject* menu )
         buttonBox,
         50,
         { 255, 255, 255 },
+        30,
         "Quit game"
     };
     addItemToMenu( menu, quitButton );
@@ -113,6 +117,7 @@ void initScoreListMenu( MenuObject* menu, ScoreList* sl )
         textBox,
         0,
         { 255, 255, 255 },
+        50,
         "- Best scores -"
     };
     addItemToMenu( menu, title );
@@ -130,6 +135,7 @@ void initScoreListMenu( MenuObject* menu, ScoreList* sl )
             textBox,
             ((i==0)?30:0),
             { 255, 255, 255 },
+            30
         };
         strcpy(item.text, str);
         addItemToMenu( menu, item );
@@ -142,6 +148,7 @@ void initScoreListMenu( MenuObject* menu, ScoreList* sl )
         buttonBox,
         100,
         { 255, 255, 255 },
+        30,
         "Back to main menu"
     };
     addItemToMenu( menu, backToMenu );
@@ -179,6 +186,7 @@ void initInGamePauseMenu( MenuObject* menu )
         textBox,
         0,
         { 255, 255, 255 },
+        50,
         "- Game Paused -"
     };
     addItemToMenu( menu, title );
@@ -190,6 +198,7 @@ void initInGamePauseMenu( MenuObject* menu )
         buttonBox,
         100,
         { 255, 255, 255 },
+        30,
         "Resume game"
     };
     addItemToMenu( menu, backToGame );
@@ -201,6 +210,7 @@ void initInGamePauseMenu( MenuObject* menu )
         buttonBox,
         50,
         { 255, 255, 255 },
+        30,
         "Back to main menu"
     };
     addItemToMenu( menu, backToMenu );
@@ -212,6 +222,7 @@ void initInGamePauseMenu( MenuObject* menu )
         buttonBox,
         50,
         { 255, 255, 255 },
+        30,
         "Exit game"
     };
     addItemToMenu( menu, exitGame );
@@ -250,6 +261,7 @@ void initGameOverMenu( MenuObject* menu )
         textBox,
         0,
         { 255, 255, 255 },
+        50,
         "- Game Over -"
     };
     addItemToMenu( menu, title );
@@ -261,6 +273,7 @@ void initGameOverMenu( MenuObject* menu )
         textBox,
         20,
         { 255, 255, 255 },
+        40,
         "message to be shown when game is over"
     };
     addItemToMenu( menu, overMsg );
@@ -272,6 +285,7 @@ void initGameOverMenu( MenuObject* menu )
         textBox,
         20,
         { 255, 255, 255 },
+        40,
         "Press R to restart"
     };
     addItemToMenu( menu, restartInfo );
@@ -281,8 +295,9 @@ void initGameOverMenu( MenuObject* menu )
         ITEM_BUTTON,
         ITEM_DEFAULT,
         buttonBox,
-        150,
+        100,
         { 255, 255, 255 },
+        30,
         "Restart"
     };
     addItemToMenu( menu, restart );
@@ -294,6 +309,7 @@ void initGameOverMenu( MenuObject* menu )
         buttonBox,
         50,
         { 255, 255, 255 },
+        30,
         "Back to main menu"
     };
     addItemToMenu( menu, backToMain );
@@ -305,6 +321,94 @@ void initGameOverMenu( MenuObject* menu )
         buttonBox,
         50,
         { 255, 255, 255 },
+        30,
+        "Exit game"
+    };
+    addItemToMenu( menu, exitGame );
+
+    agenceMenu( menu );
+}
+
+
+void initWinMenu( MenuObject* menu )
+{
+    // chargement de la font
+    menu->font = "bin/slimjoe.ttf";
+
+    menu->texturePath = "bin/menu/00300.jpg";
+    menu->nbItems = 0;
+    menu->items = malloc( 0 );
+    menu->isSequence = 0;
+    menu->backgroundAlpha = 0;
+
+    Rectanglei buttonBox;
+    buttonBox.position.x = 0;
+    buttonBox.position.y = 0;
+    buttonBox.size.x = BUTTON_SIZE.x;
+    buttonBox.size.y = BUTTON_SIZE.y;
+
+    Rectanglei textBox;
+    textBox.position.x = 0;
+    textBox.position.y = 0;
+    textBox.size.x = 400;
+    textBox.size.y = 30;
+
+    MenuItem title = {
+        50,
+        ITEM_TEXT,
+        ITEM_DEFAULT,
+        textBox,
+        0,
+        { 255, 255, 255 },
+        50,
+        "- You won -"
+    };
+    addItemToMenu( menu, title );
+
+    MenuItem score = {
+        51,
+        ITEM_TEXT,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 255, 255 },
+        40,
+        " "
+    };
+    addItemToMenu( menu, score );
+
+    MenuItem restartGame = {
+        52,
+        ITEM_BUTTON,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 255, 255 },
+        30,
+        "Restart"
+    };
+    addItemToMenu( menu, restartGame );
+
+    MenuItem backToMain = {
+        53,
+        ITEM_BUTTON,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 255, 255 },
+        30,
+        "Back to main menu"
+    };
+    addItemToMenu( menu, backToMain );
+
+    MenuItem exitGame = {
+        54,
+        ITEM_BUTTON,
+        ITEM_DEFAULT,
+        buttonBox,
+        50,
+        { 255, 255, 255 },
+        30,
         "Exit game"
     };
     addItemToMenu( menu, exitGame );
@@ -344,6 +448,7 @@ void initMenus( MenuManager* menuManager, ScoreList* sl )
     initScoreListMenu( &menuManager->scoresMenu, sl );
     initInGamePauseMenu( &menuManager->inGamePauseMenu );
     initGameOverMenu( &menuManager->gameOvermenu );
+    initWinMenu( &menuManager->winMenu );
 }
 
 

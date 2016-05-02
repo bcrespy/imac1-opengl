@@ -10,6 +10,9 @@ void initGameManager( GameManager* gm )
 
     initEventManager( &gm->eventManager );
 
+    // chargement du curseur
+    gm->cursor.id = loadTexture( "bin/cursor.png", &gm->cursor.size, 1 );
+
 /**/
     printf( "\n\n---------- Loading menus ----------\n" );
 
@@ -54,6 +57,7 @@ void initMenuGraphics( MenuManager* mm )
     renderMenuFonts( &mm->scoresMenu );
     renderMenuFonts( &mm->inGamePauseMenu );
     renderMenuFonts( &mm->gameOvermenu );
+    renderMenuFonts( &mm->winMenu );
 
     renderMenuGraphics( &mm->mainMenu );
     mm->scoresMenu.backgroundSprite = mm->mainMenu.backgroundSprite;
@@ -62,6 +66,7 @@ void initMenuGraphics( MenuManager* mm )
     mm->scoresMenu.buttonTextureHover.id = loadTexture( "bin/buttonTextureHover.png", &mm->scoresMenu.buttonTextureHover.size, 1 );
     renderMenuGraphics( &mm->inGamePauseMenu );
     renderMenuGraphics( &mm->gameOvermenu );
+    renderMenuGraphics( &mm->winMenu );
 }
 
 
@@ -90,6 +95,8 @@ void updateFrame( GameManager* gm )
             if( action )
                 itemAction( action, gm );
             updateMenuRender( &gm->menuManager.mainMenu, gm->window.screenSize, 1 );
+            updateCursorRender( gm->cursor, gm->eventManager.mousePos, gm->window.size );
+            SDL_GL_SwapBuffers();
 
         break;
 
@@ -99,6 +106,8 @@ void updateFrame( GameManager* gm )
             if( action )
                 itemAction( action, gm );
             updateMenuRender( &gm->menuManager.scoresMenu, gm->window.screenSize, 1 );
+            updateCursorRender( gm->cursor, gm->eventManager.mousePos, gm->window.size );
+            SDL_GL_SwapBuffers();
 
         break;
 
@@ -108,13 +117,14 @@ void updateFrame( GameManager* gm )
             updatePlayerPosition( &gm->objects.player );
             updateCameraPosition( &gm->objects.camera, gm->objects.player );
 /*SCORE*/
-            gm->scoreManager.currentScore+= 0.3;
+            gm->scoreManager.currentScore+= 0.7;
             renderScoreFonts( &gm->scoreManager );
             updateScorePosition( &gm->scoreManager, &gm->window );
 /*SCORE*/
             Vector2i collid;
 
-            updateGameRender( &gm->objects, &gm->scoreManager, gm->window.screenSize, 0 );
+            updateGameRender( &gm->objects, &gm->scoreManager, gm->window.screenSize );
+            SDL_GL_SwapBuffers();
 
             GroundType gdType;
             if( isPlayerColliding( &gm->objects, &collid, &gdType ) )
@@ -144,7 +154,12 @@ void updateFrame( GameManager* gm )
                         gm->menuManager.scoresMenu.buttonTexture.id = loadTexture( "bin/buttonTexture.png", &gm->menuManager.scoresMenu.buttonTexture.size, 1 );
                         gm->menuManager.scoresMenu.buttonTextureHover.id = loadTexture( "bin/buttonTextureHover.png", &gm->menuManager.scoresMenu.buttonTextureHover.size, 1 );
 
-                        gm->state = ON_MAIN_MENU;
+                        char t[20];
+                        sprintf( t, "Score : %i", (int)gm->scoreManager.currentScore );
+                        strncpy( gm->menuManager.winMenu.items[1].text, t, sizeof(gm->menuManager.winMenu.items[1].text) );
+                        renderMenuFonts( &gm->menuManager.winMenu );
+                        renderMenuGraphics( &gm->menuManager.winMenu );
+                        gm->state = ON_WIN;
                     }
                     else
                     {
@@ -162,7 +177,7 @@ void updateFrame( GameManager* gm )
             {
                 setPortalState( &gm->objects.portals[portalID], PORTAL_OFF );
                 gm->objects.portalsTaken++;
-                gm->scoreManager.currentScore-= 10;
+                gm->scoreManager.currentScore-= 13;
             }
 
         break;
@@ -173,8 +188,22 @@ void updateFrame( GameManager* gm )
             if( action )
                 itemAction( action, gm );
 
-            updateGameRender( &gm->objects, &gm->scoreManager, gm->window.screenSize, 1 );
+            updateGameRender( &gm->objects, &gm->scoreManager, gm->window.screenSize );
             updateMenuRender( &gm->menuManager.inGamePauseMenu, gm->window.screenSize, 0 );
+            updateCursorRender( gm->cursor, gm->eventManager.mousePos, gm->window.size );
+            SDL_GL_SwapBuffers();
+
+        break;
+
+        case ON_WIN :
+
+            handleDeathscreenEvents( gm );
+            action = handleMenuEvents( &gm->menuManager.winMenu, gm->window, &gm->eventManager );
+            if( action )
+                itemAction( action, gm );
+            updateMenuRender( &gm->menuManager.winMenu, gm->window.screenSize, 1 );
+            updateCursorRender( gm->cursor, gm->eventManager.mousePos, gm->window.size );
+            SDL_GL_SwapBuffers();
 
         break;
 
@@ -184,8 +213,10 @@ void updateFrame( GameManager* gm )
             if( action )
                 itemAction( action, gm );
 
-            updateGameRender( &gm->objects, &gm->scoreManager, gm->window.screenSize, 1 );
+            updateGameRender( &gm->objects, &gm->scoreManager, gm->window.screenSize );
             updateMenuRender( &gm->menuManager.gameOvermenu, gm->window.screenSize, 0 );
+            updateCursorRender( gm->cursor, gm->eventManager.mousePos, gm->window.size );
+            SDL_GL_SwapBuffers();
         break;
     }
 }
@@ -282,20 +313,25 @@ void itemAction( unsigned int itemID, GameManager* gm )
 
         // Restart game
         case 41:
+        case 52:
             clearMenuItems( &gm->menuManager.gameOvermenu );
             startGame( gm );
         break;
 
         // Back to main menu
         case 42:
+        case 53:
             clearMenuItems( &gm->menuManager.gameOvermenu );
             gm->state = ON_MAIN_MENU;
         break;
 
         // exit game
         case 43:
+        case 54:
             clearMenuItems( &gm->menuManager.gameOvermenu );
             closeGameManager( gm );
         break;
+
+        // restart game
     }
 }
