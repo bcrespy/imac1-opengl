@@ -21,20 +21,35 @@ void updateScorePosition( ScoreManager* sm, Window* window )
 
 void saveScore( ScoreManager* sm )
 {
-    FILE* file = fopen( sm->scorefile, "a" );
-    if( file != NULL )
-    {
-        char str[12];
-        sprintf( str, "%d\n", (int)sm->currentScore );
-        fputs( str, file );
-        fclose( file );
-    }
+    FILE* file = fopen( sm->scorefile, "r" );
+    unsigned long scoreFileLen;
+    char* scoreFileContent = fileToString( file, &scoreFileLen );
+    char* decryptedScoreFileContent = decryptString( scoreFileContent, scoreFileLen );
+    fclose( file );
+
+    char* newScoreFileContent = appendIntToString( decryptedScoreFileContent, &scoreFileLen, (unsigned int) sm->currentScore );
+    char* cryptedScoreFile = encryptString( newScoreFileContent, scoreFileLen );
+
+    file = fopen( sm->scorefile, "w" );
+    writeStringToFile( file, cryptedScoreFile );
+    fclose( file );
 }
 
 
 void getScoreList( ScoreList* sl )
 {
-    FILE* file = fopen( sl->filename, "r" );
+    FILE* scoreFile = fopen( sl->filename, "r" );
+    unsigned long scoreFileLen;
+    char* scoreFileContent = fileToString( scoreFile, &scoreFileLen );
+    char* decryptedScoreFileContent = decryptString( scoreFileContent, scoreFileLen );
+    fclose( scoreFile );
+
+    FILE* tempfile = fopen("bin/temp", "w");
+    writeStringToFile( tempfile, decryptedScoreFileContent );
+    fclose( tempfile );
+
+
+    FILE* file = fopen( "bin/temp", "r" );
     if( file != NULL )
     {
         sl->scoresNb = 0;
@@ -46,7 +61,7 @@ void getScoreList( ScoreList* sl )
                 sl->scoresNb++;
 
         fclose( file );
-        file = fopen( sl->filename, "r" );
+        file = fopen( "bin/temp", "r" );
 
         sl->scores = malloc( sl->scoresNb * sizeof(unsigned int) );
 
@@ -54,9 +69,12 @@ void getScoreList( ScoreList* sl )
 
         while( fgets( buf, sizeof(buf), file ) != NULL )
             sscanf( buf, "%i", &sl->scores[i++] );
+
+        fclose( file );
     }
 
     sortScores( sl );
+    remove( "bin/temp" );
 }
 
 

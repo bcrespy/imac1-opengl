@@ -41,8 +41,9 @@ CameraObject;
 /*!
  * \brief Initialise les coordonnées de la caméra
  * @param camera Pointeur vers la caméra à initialiser
+ * @param position Position à laquelle le joueur doit être initialisée
  */
-void initCameraData( CameraObject* camera );
+void initCameraData( CameraObject* camera, Vector2i playerPos );
 
 
 /*!
@@ -79,7 +80,6 @@ PlayerObject;
 /*!
  * \brief Initialise les différentes variables du joueur à t0
  * @param player Référence vers l'objet du joueur
- * @param position Position à laquelle le joueur doit être initialisée
  */
 void initPlayerData( PlayerObject* player, Vector2i position );
 
@@ -172,6 +172,7 @@ GameObjects;
 /*!
  * \brief Initialise variables des objets du jeu
  * @param go Pointeur vers le GameObjects principal
+ * @param playerPos Position de départ du joueur
  */
 void initGameObjects( GameObjects* go );
 

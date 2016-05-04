@@ -1,10 +1,10 @@
 #include "GameObjects.h"
 
 
-void initCameraData( CameraObject* camera )
+void initCameraData( CameraObject* camera, Vector2i playerPos )
 {
-    camera->position.x = 0;
-    camera->position.y = 0;
+    camera->position.x = playerPos.x;
+    camera->position.y = playerPos.y;
 }
 
 
@@ -29,7 +29,7 @@ void freePlayerData( PlayerObject* player )
 
 void initGameObjects( GameObjects* go )
 {
-    initCameraData( &go->camera );
+    initCameraData( &go->camera, go->map.startPosition );
     initPlayerData( &go->player, go->map.startPosition );
     go->portalsTaken = 0;
 }

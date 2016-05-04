@@ -12,6 +12,8 @@
 
 #include "MathsComponents.h"
 #include "Graphics.h"
+#include "Encrypt.h"
+#include "fileman.h"
 
 #include "VideoManager.h"
 

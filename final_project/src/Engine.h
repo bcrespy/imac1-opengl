@@ -32,7 +32,7 @@ static const float MAX_SPEED = 800.;
 
 
 // Nombre de pixels autour du joueur pour la recherche de collisions (doit être multiple de 2)
-static const unsigned int BOX_SIZE_COLLISION = 60;
+static const unsigned int BOX_SIZE_COLLISION = 120;
 
 
 typedef struct gameengine

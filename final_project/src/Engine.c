@@ -27,7 +27,6 @@ GroundType** loadMAP( const char filename[], GameObjects* objects )
     if( surface == NULL )
     {
         printf( "Error: \"%s\"\n",SDL_GetError() );
-        return;
     }
 
     int x, y;

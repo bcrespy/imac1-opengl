@@ -67,7 +67,7 @@ void initMainMenu( MenuObject* menu )
         50,
         { 255, 255, 255 },
         30,
-        "Highscores"
+        "Best Scores"
     };
     addItemToMenu( menu, highscoresButton );
 
